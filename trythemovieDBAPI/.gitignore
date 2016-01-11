@@ -1,0 +1,9 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+/app/build/generated/source/r/debug/pom2/poly/com/trythemoviedbapi/R.java
