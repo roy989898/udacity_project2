@@ -32,6 +32,12 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import retrofit2.Call;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     final String IMAGE = "images";
     final String BASE_URL = "base_url";
@@ -67,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myArrayAdapter = new MyArrayAdapter(this, movieArrayList);
         gridView.setAdapter(myArrayAdapter);
         gridView.setOnItemClickListener(this);
+
+        new getConfigTask().execute();
         
     }
 
@@ -408,5 +416,39 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         }
     }
+     class getConfigTask extends AsyncTask<Void,Void,Config> {
+        @Override
+        protected Config doInBackground(Void... params) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.themoviedb.org")
+                    .addConverterFactory(GsonConverterFactory.create()).build();
+
+            APIService service = retrofit.create(APIService.class);
+            Call<Config> callConfig = service.loadconfig();
+            Response<Config> config=null;
+            try {
+                config = callConfig.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return config.body();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Config config) {
+            super.onPostExecute(config);
+            Config result=config;
+        }
+    }
+
+    class get
+
 }
 
