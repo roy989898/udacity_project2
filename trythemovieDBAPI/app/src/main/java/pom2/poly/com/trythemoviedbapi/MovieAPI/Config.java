@@ -1,4 +1,4 @@
-package pom2.poly.com.trythemoviedbapi;
+package pom2.poly.com.trythemoviedbapi.MovieAPI;
 
 
 
@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Config {
 
-    public  Images images;
+    public Images images;
     public  List<String> change_keys = new ArrayList<String>();
 
     /**

@@ -31,7 +31,9 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
+import pom2.poly.com.trythemoviedbapi.MovieAPI.APIService;
+import pom2.poly.com.trythemoviedbapi.MovieAPI.Config;
+import pom2.poly.com.trythemoviedbapi.MovieAPI.Results;
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
@@ -75,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         gridView.setOnItemClickListener(this);
 
         new getConfigTask().execute();
-        
+        new getMovieTask().execute(Utility.POP_MOVIE);
+
     }
 
 
@@ -416,7 +419,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         }
     }
-     class getConfigTask extends AsyncTask<Void,Void,Config> {
+
+    class getConfigTask extends AsyncTask<Void, Void, Config> {
         @Override
         protected Config doInBackground(Void... params) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -425,15 +429,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             APIService service = retrofit.create(APIService.class);
             Call<Config> callConfig = service.loadconfig();
-            Response<Config> config=null;
+            Response<Config> config = null;
             try {
                 config = callConfig.execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+            if(config!=null){
+                return config.body();
+            }else{
+                return null;
+            }
 
-            return config.body();
         }
 
         @Override
@@ -444,11 +452,58 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected void onPostExecute(Config config) {
             super.onPostExecute(config);
-            Config result=config;
+            Config result = config;
         }
     }
 
-    class get
+    class getMovieTask extends AsyncTask<String, Void, Results> {
+        @Override
+        protected Results doInBackground(String... params) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.themoviedb.org")
+                    .addConverterFactory(GsonConverterFactory.create()).build();
+
+            APIService service = retrofit.create(APIService.class);
+            Call<Results> callResults=null;
+            switch (params[0]) {
+                case Utility.POP_MOVIE:
+                    callResults = service.loadPopMovie();
+                    break;
+
+                case Utility.TOP_MOVIE:
+                    callResults = service.loadTopMovie();
+                    break;
+
+            }
+
+            Response<Results> results = null;
+            try {
+                results = callResults.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(results!=null){
+                return results.body();
+            }else{
+                return null;
+            }
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onPostExecute(Results results) {
+            super.onPostExecute(results);
+            Results results1=results;
+        }
+    }
+
 
 }
 
