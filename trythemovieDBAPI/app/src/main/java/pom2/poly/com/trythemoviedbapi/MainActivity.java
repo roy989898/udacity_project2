@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         gridView.setAdapter(myArrayAdapter);
         gridView.setOnItemClickListener(this);
 
-        new getConfigTask().execute();
-        new getMovieTask().execute(Utility.POP_MOVIE);
+        //new getConfigTask().execute();
+        //new getMovieTask().execute(Utility.POP_MOVIE);
 
     }
 
@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //this method use the data from getMovieData and getConfig ,to get the MOVIE object array
     private Movie[] getMOvieObject() {
-        HashMap<String, String> config = getConfig();
+        /*HashMap<String, String> config = getConfig();
         ArrayList<Map<String, String>> movieArray = getMovieData(perf_sort_op);
         ArrayList<Movie> movieArrayList = new ArrayList<>();
         if (config == null || movieArray == null) {
@@ -367,7 +367,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             return ma;
 
 
-        }
+        }*/
+//        configr = null;
+//        results1 = null;
+//        //the result will put into the configr
+//        new getConfigTask().execute();
+//        //the result will put into the results1
+//        new getMovieTask().execute(perf_sort_op);
+        Config configr = getConfigData();
+        Results result1 = getMovieDatav2(perf_sort_op);
+        return MovieFactory.startMakeMovieArray(configr,result1);
+
 
     }
 
@@ -420,6 +430,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    private Config getConfigData(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.themoviedb.org")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        APIService service = retrofit.create(APIService.class);
+        Call<Config> callConfig = service.loadconfig();
+        Response<Config> config = null;
+        try {
+            config = callConfig.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (config != null) {
+            return config.body();
+        } else {
+            return null;
+        }
+
+    }
+
     class getConfigTask extends AsyncTask<Void, Void, Config> {
         @Override
         protected Config doInBackground(Void... params) {
@@ -436,9 +468,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 e.printStackTrace();
             }
 
-            if(config!=null){
+            if (config != null) {
                 return config.body();
-            }else{
+            } else {
                 return null;
             }
 
@@ -451,8 +483,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected void onPostExecute(Config config) {
-            super.onPostExecute(config);
-            Config result = config;
+            //super.onPostExecute(config);
+            //configr = config;
+        }
+    }
+
+    private Results getMovieDatav2(String topOrPop){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.themoviedb.org")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        APIService service = retrofit.create(APIService.class);
+        Call<Results> callResults = null;
+        switch (topOrPop) {
+            case Utility.POP_MOVIE:
+                callResults = service.loadPopMovie();
+                break;
+
+            case Utility.TOP_MOVIE:
+                callResults = service.loadTopMovie();
+                break;
+
+        }
+
+        Response<Results> results = null;
+        try {
+            results = callResults.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (results != null) {
+            return results.body();
+        } else {
+            return null;
         }
     }
 
@@ -464,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     .addConverterFactory(GsonConverterFactory.create()).build();
 
             APIService service = retrofit.create(APIService.class);
-            Call<Results> callResults=null;
+            Call<Results> callResults = null;
             switch (params[0]) {
                 case Utility.POP_MOVIE:
                     callResults = service.loadPopMovie();
@@ -483,9 +547,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 e.printStackTrace();
             }
 
-            if(results!=null){
+            if (results != null) {
                 return results.body();
-            }else{
+            } else {
                 return null;
             }
 
@@ -499,8 +563,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected void onPostExecute(Results results) {
-            super.onPostExecute(results);
-            Results results1=results;
+            //super.onPostExecute(results);
+            //results1 = results;
         }
     }
 
