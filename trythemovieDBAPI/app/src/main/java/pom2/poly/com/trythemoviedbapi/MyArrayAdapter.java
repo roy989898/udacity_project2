@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,16 +20,15 @@ public class MyArrayAdapter extends ArrayAdapter<Movie> {
     private List<Movie> objects;
 
 
-
     public MyArrayAdapter(Context context, List<Movie> objects) {
         super(context, 0, objects);
-        this.objects=objects;
+        this.objects = objects;
         Log.d("MyArrayAdapter", "MyArrayAdapter");
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d("MyArrayAdapter",position+"");
+        Log.d("MyArrayAdapter", position + "");
         Movie amovie = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movieshow, parent, false);

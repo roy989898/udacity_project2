@@ -84,6 +84,9 @@ public class Movie implements Parcelable {
         return poster_path;
     }
 
+    public void setPoster_path(String path) {
+        this.poster_path = base_url + poster_size + path;
+    }
 
     public String getBackdrop_path() {
         return backdrop_path;
@@ -91,10 +94,6 @@ public class Movie implements Parcelable {
 
     public void setBackdrop_path(String path) {
         this.backdrop_path = base_url + backdrop_size + path;
-    }
-
-    public void setPoster_path(String path) {
-        this.poster_path = base_url + poster_size + path;
     }
 
     public String getR_date() {
