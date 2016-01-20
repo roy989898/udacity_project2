@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.APIService;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Config;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Results;
+import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbHelper;
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
@@ -54,6 +55,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        //try SQL
+        MovieDbHelper movieDbHelper = new MovieDbHelper(this);
+        movieDbHelper.getWritableDatabase();
+        //S
+
 
         if (savedInstanceState != null) {
             movieArrayList = (ArrayList<Movie>) savedInstanceState.get(MOVIE_KEY);
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //new getConfigTask().execute();
         //new getMovieTask().execute(Utility.POP_MOVIE);
+
 
     }
 
