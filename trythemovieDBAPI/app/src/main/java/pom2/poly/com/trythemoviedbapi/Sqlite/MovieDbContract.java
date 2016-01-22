@@ -20,7 +20,8 @@ public class MovieDbContract {
     public static final String PATH_MOVIE = "MOVIE";
     public static final String PATH_FAV = "FAVOURITE";
     public static final String PATH_MOVIE_POP = "MOVIE_POP";
-    public static final String PATH_MOVIE_TOP = "MOVIE_FAV";
+    public static final String PATH_MOVIE_TOP = "MOVIE_TOP";
+    public static final String PATH_MOVIE_FAV = "MOVIE_FAV";
 
 
     /* Inner class that defines the table contents of the location table */
@@ -49,6 +50,7 @@ public class MovieDbContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();
         public static final Uri CONTENT_URI_POP = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE_POP).build();
         public static final Uri CONTENT_URI_TOP = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE_TOP).build();
+        public static final Uri CONTENT_URI_FAV = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE_FAV).build();
 
         //define the return type of content provider
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
