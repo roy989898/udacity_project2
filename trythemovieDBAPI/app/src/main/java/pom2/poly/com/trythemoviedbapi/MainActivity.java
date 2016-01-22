@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -33,17 +36,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+    private static final int MOVIE_LOADER = 0;
     final String IMAGE = "images";
     final String BASE_URL = "base_url";
     final String POSTER_Z = "poster_sizes";
     final String MOVIE_KEY = "getTHeMovie";
     @Bind(R.id.gridView)
     GridView gridView;
-
     private String perf_sort_op;
     private ArrayList<Movie> movieArrayList;
-    private MyArrayAdapter myArrayAdapter;
+    //private MyArrayAdapter myArrayAdapter;
+    private MyCursorAdapter myCursorAdapter;
 
     @Override
     protected void onStart() {
@@ -70,14 +74,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         } else {
             movieArrayList = new ArrayList<>();
         }
-        myArrayAdapter = new MyArrayAdapter(this, movieArrayList);
-        gridView.setAdapter(myArrayAdapter);
-        gridView.setOnItemClickListener(this);
+        //myArrayAdapter = new MyArrayAdapter(this, movieArrayList);
+        myCursorAdapter = new MyCursorAdapter(this, null);
+        //gridView.setAdapter(myArrayAdapter);
+        gridView.setAdapter(myCursorAdapter);
+        //TODO click iteam
+        //gridView.setOnItemClickListener(this);
+
 
         //new getConfigTask().execute();
         //new getMovieTask().execute(Utility.POP_MOVIE);
 
-
+        getSupportLoaderManager().initLoader(MOVIE_LOADER,savedInstanceState,this);
     }
 
 
@@ -106,9 +114,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this, DetailActivity.class);
+        /*Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(DetailActivity.class.getName(), myArrayAdapter.getItem(position));
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
     @Override
@@ -198,6 +206,39 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return uri;
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Loader<Cursor> cursorLoader = null;
+        if(perf_sort_op==null){
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            perf_sort_op = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
+        }
+        switch (perf_sort_op) {
+            case Utility.TOP_MOVIE:
+
+                cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI_TOP, null, null, null, null);
+
+                break;
+            case Utility.POP_MOVIE:
+
+                cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI_POP, null, null, null, null);
+
+                break;
+        }
+        return cursorLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        myCursorAdapter.swapCursor(data);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        myCursorAdapter.swapCursor(null);
+    }
+
     class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
         @Override
         protected Movie[] doInBackground(Void... voids) {
@@ -214,11 +255,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected void onPostExecute(Movie[] movieArray) {
             super.onPostExecute(movieArray);
+            //Todo delete the Array adapter
             if (movieArray != null) {
                 Log.i("GdataFromMOVIEDBtask", "in onPostExecute");
                 movieArrayList.clear();
                 movieArrayList.addAll(Arrays.asList(movieArray));
-                myArrayAdapter.notifyDataSetChanged();
+                //myArrayAdapter.notifyDataSetChanged();
             }
             //for test the ContentProvider only
             //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));

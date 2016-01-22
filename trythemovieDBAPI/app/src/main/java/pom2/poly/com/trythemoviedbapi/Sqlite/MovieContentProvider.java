@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import pom2.poly.com.trythemoviedbapi.Movie;
+
 public class MovieContentProvider extends ContentProvider {
     static final int MOVIE = 100;
     static final int MOVIE_POP = 101;
@@ -67,6 +69,7 @@ public class MovieContentProvider extends ContentProvider {
         SQLiteDatabase db = moviedbhelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         Uri reuri = null;
+        Uri setUri=null;
         switch (match) {
             case MOVIE:
                 //first need to check if the m_id appear first
@@ -89,11 +92,13 @@ public class MovieContentProvider extends ContentProvider {
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
 
+                setUri=MovieDbContract.MovieEntry.CONTENT_URI;
                 break;
 
             case FAV:
                 //TODO
                 //return null;
+                setUri=MovieDbContract.FavouriteEntry.CONTENT_URI;
                 break;
 
             default:
@@ -101,7 +106,7 @@ public class MovieContentProvider extends ContentProvider {
         }
 
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        getContext().getContentResolver().notifyChange(setUri, null);
         return reuri;
     }
 
@@ -115,35 +120,43 @@ public class MovieContentProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         Cursor recursor = null;
+        Uri setUri=null;
         switch (sUriMatcher.match(uri)) {
             case FAV:
                 //TODO:FAV query
+                setUri=MovieDbContract.FavouriteEntry.CONTENT_URI;
                 break;
             case MOVIE:
                 Log.i("show_cursor", "in MOVIE");
                 recursor = getMovie(projection, selection, selectionArgs);
+                setUri= MovieDbContract.MovieEntry.CONTENT_URI;
                 break;
             case MOVIE_FAV:
                 //TODO:Movie with FAVquery
+                setUri= MovieDbContract.MovieEntry.CONTENT_URI;
                 break;
             case MOVIE_POP:
                 Log.i("show_cursor", "in MOVIE_POP");
                 recursor = getMoviewithPOP(projection, selection, selectionArgs);
+                setUri= MovieDbContract.MovieEntry.CONTENT_URI;
                 break;
 
             case MOVIE_TOP:
                 Log.i("show_cursor", "in MOVIE_TOP");
                 recursor = getMoviewithTOP(projection, selection, selectionArgs);
+                setUri= MovieDbContract.MovieEntry.CONTENT_URI;
                 break;
             case MOVIE_ID:
                 Log.i("show_cursor", "in MOVIE_ID");
                 recursor = getMoviewithID(projection, MovieDbContract.MovieEntry.getMovieIDfromURI(uri));
+                setUri= MovieDbContract.MovieEntry.CONTENT_URI;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
 
         }
-        recursor.setNotificationUri(getContext().getContentResolver(), uri);
+        recursor.setNotificationUri(getContext().getContentResolver(), setUri);
+
         return recursor;
     }
 
@@ -186,17 +199,19 @@ public class MovieContentProvider extends ContentProvider {
         SQLiteDatabase db = moviedbhelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         int state = 0;
+        Uri setUri=null;
         switch (match) {
             case MOVIE:
                 //first need to check if the m_id appear first
                 state = db.delete(MovieDbContract.MovieEntry.TABLE_NAME, null, null);
 
-
+                 setUri = MovieDbContract.MovieEntry.CONTENT_URI;
                 break;
 
             case FAV:
                 //TODO: delete the FAV
                 //return null;
+                setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
                 break;
 
             default:
@@ -204,7 +219,7 @@ public class MovieContentProvider extends ContentProvider {
         }
 
         if (state != 0)
-            getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(setUri, null);
         return state;
     }
 }
