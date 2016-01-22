@@ -221,16 +221,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 myArrayAdapter.notifyDataSetChanged();
             }
             //for test the ContentProvider only
-            testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
+            //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
 
 
         }
 
-        private void testThequery(Uri uri){
-            Cursor cursor=getContentResolver().query(uri,null,null,null,null);
-            while(cursor.moveToNext()){
-                Log.i("show_cursor",cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry._ID))+" "+cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE))+" rage: "
-                        +cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE))+" popularity: "+cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POP)));
+        private void testThequery(Uri uri) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            while (cursor.moveToNext()) {
+                Log.i("show_cursor", cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry._ID)) + " " + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE)) + " rage: "
+                        + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE)) + " popularity: " + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POP)));
             }
         }
 

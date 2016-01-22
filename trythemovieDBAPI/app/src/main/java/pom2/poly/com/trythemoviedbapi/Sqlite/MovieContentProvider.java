@@ -117,14 +117,14 @@ public class MovieContentProvider extends ContentProvider {
         Cursor recursor = null;
         switch (sUriMatcher.match(uri)) {
             case FAV:
-                //TODO
+                //TODO:FAV query
                 break;
             case MOVIE:
                 Log.i("show_cursor", "in MOVIE");
                 recursor = getMovie(projection, selection, selectionArgs);
                 break;
             case MOVIE_FAV:
-                //TODO
+                //TODO:Movie with FAVquery
                 break;
             case MOVIE_POP:
                 Log.i("show_cursor", "in MOVIE_POP");
@@ -195,7 +195,7 @@ public class MovieContentProvider extends ContentProvider {
                 break;
 
             case FAV:
-                //TODO
+                //TODO: delete the FAV
                 //return null;
                 break;
 
