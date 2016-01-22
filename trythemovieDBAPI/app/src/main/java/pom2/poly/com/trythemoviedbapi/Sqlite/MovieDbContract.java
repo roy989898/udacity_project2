@@ -75,8 +75,8 @@ public class MovieDbContract {
             return ContentUris.withAppendedId(CONTENT_URI, ID);
         }
 
-        public static String getMovieIDfromURI(Uri uri){
-            return uri.getLastPathSegment();
+        public static long getMovieIDfromURI(Uri uri){
+            return Long.parseLong(uri.getLastPathSegment());
         }
 
 

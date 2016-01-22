@@ -3,6 +3,7 @@ package pom2.poly.com.trythemoviedbapi;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -219,7 +220,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 movieArrayList.addAll(Arrays.asList(movieArray));
                 myArrayAdapter.notifyDataSetChanged();
             }
+            //for test the ContentProvider only
+            testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
 
+
+        }
+
+        private void testThequery(Uri uri){
+            Cursor cursor=getContentResolver().query(uri,null,null,null,null);
+            while(cursor.moveToNext()){
+                Log.i("show_cursor",cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry._ID))+" "+cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE))+" rage: "
+                        +cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE))+" popularity: "+cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POP)));
+            }
         }
 
         @Override

@@ -6,6 +6,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 public class MovieContentProvider extends ContentProvider {
     static final int MOVIE = 100;
@@ -30,9 +31,9 @@ public class MovieContentProvider extends ContentProvider {
 
         matcher.addURI(authority, MovieDbContract.PATH_MOVIE, MOVIE);
         matcher.addURI(authority, MovieDbContract.PATH_MOVIE_POP, MOVIE_POP);
-        matcher.addURI(authority, MovieDbContract.PATH_MOVIE_POP, MOVIE_TOP);
+        matcher.addURI(authority, MovieDbContract.PATH_MOVIE_TOP, MOVIE_TOP);
         matcher.addURI(authority, MovieDbContract.PATH_MOVIE_FAV, MOVIE_FAV);
-        matcher.addURI(authority, MovieDbContract.PATH_MOVIE + "#", MOVIE_ID);
+        matcher.addURI(authority, MovieDbContract.PATH_MOVIE + "/#", MOVIE_ID);
 
         matcher.addURI(authority, MovieDbContract.PATH_FAV, FAV);
 
@@ -71,18 +72,18 @@ public class MovieContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         SQLiteDatabase db = moviedbhelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
-
+        Uri reuri=null;
         switch (match) {
             case MOVIE:
                 //first need to check if the m_id appear first
-                Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, new String[]{MovieDbContract.MovieEntry._ID,MovieDbContract.MovieEntry.COLUMN_M_ID}, null, null, null, null, null);
+                Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, new String[]{MovieDbContract.MovieEntry._ID, MovieDbContract.MovieEntry.COLUMN_M_ID}, null, null, null, null, null);
                 cursor.moveToPosition(-1);
 
                 //here check if the movie id in the data base already,if yes return the _ID(no the movie id,just the row id)
-                while(cursor.moveToNext()){
-                    if(cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID)).equals(values.getAsString(MovieDbContract.MovieEntry.COLUMN_M_ID))){
-                        String _id=cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID));
-                        return MovieDbContract.MovieEntry.buildMovieID(Long.parseLong(_id));
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID)).equals(values.getAsString(MovieDbContract.MovieEntry.COLUMN_M_ID))) {
+                        String _id = cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID));
+                        return reuri= MovieDbContract.MovieEntry.buildMovieID(Long.parseLong(_id));
                     }
                 }
 
@@ -90,17 +91,24 @@ public class MovieContentProvider extends ContentProvider {
                 //the row ID of the newly inserted row, or -1 if an error occurred
                 long _id = db.insert(MovieDbContract.MovieEntry.TABLE_NAME, null, values);
                 if (_id > -1)
-                    return MovieDbContract.MovieEntry.buildMovieID(_id);
+                    reuri= MovieDbContract.MovieEntry.buildMovieID(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
 
+                break;
+
             case FAV:
                 //TODO
-                return null;
+                //return null;
+                break;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
+
+        getContext().getContentResolver().notifyChange(uri, null);
+        return reuri;
     }
 
     @Override
@@ -112,37 +120,63 @@ public class MovieContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        /*switch(sUriMatcher.match(uri)){
+        Cursor recursor = null;
+        switch (sUriMatcher.match(uri)) {
             case FAV:
                 //TODO
                 break;
             case MOVIE:
+                Log.i("show_cursor","in MOVIE");
+                recursor = getMovie(projection, selection, selectionArgs);
                 break;
             case MOVIE_FAV:
                 //TODO
                 break;
             case MOVIE_POP:
+                Log.i("show_cursor","in MOVIE_POP");
+                recursor = getMoviewithPOP(projection, selection, selectionArgs);
                 break;
+
             case MOVIE_TOP:
+                Log.i("show_cursor","in MOVIE_TOP");
+                recursor = getMoviewithTOP(projection, selection, selectionArgs);
                 break;
             case MOVIE_ID:
+                Log.i("show_cursor","in MOVIE_ID");
+                recursor = getMoviewithID(projection, MovieDbContract.MovieEntry.getMovieIDfromURI(uri));
                 break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
 
-        }*/
-
-        return null;
+        }
+        recursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return recursor;
     }
 
     private Cursor getMovie(String[] projection, String selection,
-                     String[] selectionArgs){
+                            String[] selectionArgs) {
         SQLiteDatabase db = moviedbhelper.getReadableDatabase();
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
         return cursor;
     }
+
     private Cursor getMoviewithPOP(String[] projection, String selection,
-                            String[] selectionArgs){
+                                   String[] selectionArgs) {
         SQLiteDatabase db = moviedbhelper.getReadableDatabase();
-        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null,null);
+        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, MovieDbContract.MovieEntry.COLUMN_POP + " DESC");
+        return cursor;
+    }
+
+    private Cursor getMoviewithTOP(String[] projection, String selection,
+                                   String[] selectionArgs) {
+        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+        return cursor;
+    }
+
+    private Cursor getMoviewithID(String[] projection, long m_id) {
+        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, MovieDbContract.MovieEntry.COLUMN_M_ID + " =?", new String[]{m_id + ""}, null, null, MovieDbContract.MovieEntry.COLUMN_RAGE + " DESC");
         return cursor;
     }
 
