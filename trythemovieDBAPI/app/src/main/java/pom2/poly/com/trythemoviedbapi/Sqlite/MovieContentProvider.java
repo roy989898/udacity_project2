@@ -40,12 +40,6 @@ public class MovieContentProvider extends ContentProvider {
         return matcher;
     }
 
-    @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
-        //TODO
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
     @Override
     public String getType(Uri uri) {
@@ -72,7 +66,7 @@ public class MovieContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         SQLiteDatabase db = moviedbhelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
-        Uri reuri=null;
+        Uri reuri = null;
         switch (match) {
             case MOVIE:
                 //first need to check if the m_id appear first
@@ -83,7 +77,7 @@ public class MovieContentProvider extends ContentProvider {
                 while (cursor.moveToNext()) {
                     if (cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID)).equals(values.getAsString(MovieDbContract.MovieEntry.COLUMN_M_ID))) {
                         String _id = cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID));
-                        return reuri= MovieDbContract.MovieEntry.buildMovieID(Long.parseLong(_id));
+                        return reuri = MovieDbContract.MovieEntry.buildMovieID(Long.parseLong(_id));
                     }
                 }
 
@@ -91,7 +85,7 @@ public class MovieContentProvider extends ContentProvider {
                 //the row ID of the newly inserted row, or -1 if an error occurred
                 long _id = db.insert(MovieDbContract.MovieEntry.TABLE_NAME, null, values);
                 if (_id > -1)
-                    reuri= MovieDbContract.MovieEntry.buildMovieID(_id);
+                    reuri = MovieDbContract.MovieEntry.buildMovieID(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
 
@@ -126,23 +120,23 @@ public class MovieContentProvider extends ContentProvider {
                 //TODO
                 break;
             case MOVIE:
-                Log.i("show_cursor","in MOVIE");
+                Log.i("show_cursor", "in MOVIE");
                 recursor = getMovie(projection, selection, selectionArgs);
                 break;
             case MOVIE_FAV:
                 //TODO
                 break;
             case MOVIE_POP:
-                Log.i("show_cursor","in MOVIE_POP");
+                Log.i("show_cursor", "in MOVIE_POP");
                 recursor = getMoviewithPOP(projection, selection, selectionArgs);
                 break;
 
             case MOVIE_TOP:
-                Log.i("show_cursor","in MOVIE_TOP");
+                Log.i("show_cursor", "in MOVIE_TOP");
                 recursor = getMoviewithTOP(projection, selection, selectionArgs);
                 break;
             case MOVIE_ID:
-                Log.i("show_cursor","in MOVIE_ID");
+                Log.i("show_cursor", "in MOVIE_ID");
                 recursor = getMoviewithID(projection, MovieDbContract.MovieEntry.getMovieIDfromURI(uri));
                 break;
             default:
@@ -185,5 +179,32 @@ public class MovieContentProvider extends ContentProvider {
                       String[] selectionArgs) {
         // TODO: Implement this to handle requests to update one or more rows.
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        SQLiteDatabase db = moviedbhelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        int state = 0;
+        switch (match) {
+            case MOVIE:
+                //first need to check if the m_id appear first
+                state = db.delete(MovieDbContract.MovieEntry.TABLE_NAME, null, null);
+
+
+                break;
+
+            case FAV:
+                //TODO
+                //return null;
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if (state != 0)
+            getContext().getContentResolver().notifyChange(uri, null);
+        return state;
     }
 }
