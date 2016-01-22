@@ -5,6 +5,7 @@ package pom2.poly.com.trythemoviedbapi.Sqlite;
  */
 
 
+import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -26,6 +27,10 @@ public class MovieDbContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAV).build();
 
+        //define the return type of content provider
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FAV;//for multiple item
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FAV;
+
         //SQLite part
 
         // Table name
@@ -44,14 +49,12 @@ public class MovieDbContract {
         public static final Uri CONTENT_URI_POP = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE_POP).build();
         public static final Uri CONTENT_URI_TOP = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE_TOP).build();
 
-        public static Uri buildMovieID(String ID){
-            return CONTENT_URI.buildUpon().appendPath(ID).build();
-        }
+        //define the return type of content provider
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
+        public static final String CONTENT__ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
 
-        public static final String TABLE_NAME = "movie";
         //SQLite part
-
-
+        public static final String TABLE_NAME = "movie";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_POSTER_PATH = "posterpath";
         public static final String COLUMN_BACKDROP_PATH = "packdroppath";
@@ -62,6 +65,10 @@ public class MovieDbContract {
         public static final String COLUMN_BACK_DROP_SZIE = "backdropsize";
         public static final String COLUMN_BASE_URL = "baseurl";
         public static final String COLUMN_M_ID = "moviewid";
+
+        public static Uri buildMovieID(String ID) {
+            return CONTENT_URI.buildUpon().appendPath(ID).build();
+        }
 
 
     }
