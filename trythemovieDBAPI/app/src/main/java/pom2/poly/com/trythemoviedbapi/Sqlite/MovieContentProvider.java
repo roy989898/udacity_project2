@@ -42,6 +42,7 @@ public class MovieContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // Implement this to handle requests to delete one or more rows.
+        //TODO
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -73,6 +74,19 @@ public class MovieContentProvider extends ContentProvider {
 
         switch (match) {
             case MOVIE:
+                //first need to check if the m_id appear first
+                Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, new String[]{MovieDbContract.MovieEntry._ID,MovieDbContract.MovieEntry.COLUMN_M_ID}, null, null, null, null, null);
+                cursor.moveToPosition(-1);
+
+                //here check if the movie id in the data base already,if yes return the _ID(no the movie id,just the row id)
+                while(cursor.moveToNext()){
+                    if(cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID)).equals(values.getAsString(MovieDbContract.MovieEntry.COLUMN_M_ID))){
+                        String _id=cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID));
+                        return MovieDbContract.MovieEntry.buildMovieID(Long.parseLong(_id));
+                    }
+                }
+
+                //if the movie id in the data base already,if NO, do the below
                 //the row ID of the newly inserted row, or -1 if an error occurred
                 long _id = db.insert(MovieDbContract.MovieEntry.TABLE_NAME, null, values);
                 if (_id > -1)
@@ -81,6 +95,7 @@ public class MovieContentProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
 
             case FAV:
+                //TODO
                 return null;
 
             default:
