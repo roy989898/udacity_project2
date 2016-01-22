@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.net.Uri;
 
 public class MovieContentProvider extends ContentProvider {
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+
     static final int MOVIE = 100;
     static final int MOVIE_POP = 101;
     static final int MOVIE_TOP = 102;
@@ -44,9 +46,23 @@ public class MovieContentProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        // TODO: Implement this to handle requests for the MIME type of the data
-        // at the given URI.
-        throw new UnsupportedOperationException("Not yet implemented");
+        int match = sUriMatcher.match(uri);
+        switch (match){
+            case MOVIE:
+                return MovieDbContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_POP:
+                return MovieDbContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_TOP:
+                return MovieDbContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_FAV:
+                return MovieDbContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_ID:
+                return MovieDbContract.MovieEntry.CONTENT__ITEM_TYPE;
+            case FAV:
+                return MovieDbContract.FavouriteEntry.CONTENT_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
     }
 
     @Override
