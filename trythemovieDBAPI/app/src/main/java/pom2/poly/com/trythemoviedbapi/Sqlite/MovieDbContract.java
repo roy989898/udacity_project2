@@ -6,6 +6,7 @@ package pom2.poly.com.trythemoviedbapi.Sqlite;
 
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -66,8 +67,12 @@ public class MovieDbContract {
         public static final String COLUMN_BASE_URL = "baseurl";
         public static final String COLUMN_M_ID = "moviewid";
 
-        public static Uri buildMovieID(String ID) {
-            return CONTENT_URI.buildUpon().appendPath(ID).build();
+        public static Uri buildMovieID(long ID) {
+            return ContentUris.withAppendedId(CONTENT_URI, ID);
+        }
+
+        public static String getMovieIDfromURI(Uri uri){
+            return uri.getLastPathSegment();
         }
 
 
