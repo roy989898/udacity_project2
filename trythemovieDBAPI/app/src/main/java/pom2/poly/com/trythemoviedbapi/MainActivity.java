@@ -1,7 +1,9 @@
 package pom2.poly.com.trythemoviedbapi;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,6 +24,7 @@ import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.APIService;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Config;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Results;
+import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbHelper;
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
@@ -177,12 +180,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    private Uri insertIntoContntProvider(Movie movie) {
+        ContentValues cv = new ContentValues();
+        cv.put(MovieDbContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+        cv.put(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPoster_path());
+        cv.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH, movie.getBackdrop_path());
+        cv.put(MovieDbContract.MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
+        cv.put(MovieDbContract.MovieEntry.COLUMN_RAGE, movie.getRage());
+        cv.put(MovieDbContract.MovieEntry.COLUMN_R_DATE, movie.getR_date());
+        cv.put(MovieDbContract.MovieEntry.COLUMN_M_ID, movie.getM_id());
+        cv.put(MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE, 0);
+        cv.put(MovieDbContract.MovieEntry.COLUMN_BACK_DROP_SZIE, 0);
+        cv.put(MovieDbContract.MovieEntry.COLUMN_BASE_URL, "");
+        Uri uri = getContentResolver().insert(MovieDbContract.MovieEntry.CONTENT_URI, cv);
+        return uri;
+    }
+
     class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
         @Override
         protected Movie[] doInBackground(Void... voids) {
             Movie[] movieArray = getMOvieObject();
+            for (Movie m : movieArray) {
+                insertIntoContntProvider(m);
+
+            }
+
             return movieArray;
         }
+
 
         @Override
         protected void onPostExecute(Movie[] movieArray) {

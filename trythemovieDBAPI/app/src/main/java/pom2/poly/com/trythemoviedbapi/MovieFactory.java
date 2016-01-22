@@ -32,6 +32,7 @@ public class MovieFactory {
                 m.setOverview(r.getOverview());
                 m.setR_date(r.getReleaseDate());
                 m.setPoster_path(r.getPosterPath());
+                m.setM_id(r.getId().toString());
                 arListofMovie.add(m);
             }
         }

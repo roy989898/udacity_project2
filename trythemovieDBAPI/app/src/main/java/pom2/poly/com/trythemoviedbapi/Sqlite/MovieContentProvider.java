@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 public class MovieContentProvider extends ContentProvider {
@@ -35,7 +36,7 @@ public class MovieContentProvider extends ContentProvider {
 
         matcher.addURI(authority, MovieDbContract.PATH_FAV, FAV);
 
-        return null;
+        return matcher;
     }
 
     @Override
@@ -67,8 +68,24 @@ public class MovieContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
-        throw new UnsupportedOperationException("Not yet implemented");
+        SQLiteDatabase db = moviedbhelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+
+        switch (match) {
+            case MOVIE:
+                //the row ID of the newly inserted row, or -1 if an error occurred
+                long _id = db.insert(MovieDbContract.MovieEntry.TABLE_NAME, null, values);
+                if (_id > -1)
+                    return MovieDbContract.MovieEntry.buildMovieID(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+
+            case FAV:
+                return null;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
     }
 
     @Override

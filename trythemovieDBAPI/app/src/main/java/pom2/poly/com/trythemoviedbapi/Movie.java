@@ -28,6 +28,16 @@ public class Movie implements Parcelable {
     private String poster_size;
     private String backdrop_size;
     private String base_url;
+    private String m_id;
+
+    public String getM_id() {
+        return m_id;
+    }
+
+    public Movie setM_id(String m_id) {
+        this.m_id = m_id;
+        return this;
+    }
 
     public Movie(String poster_size, String base_url, String backdrop_size) {
         this.poster_size = poster_size;
