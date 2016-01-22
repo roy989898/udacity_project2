@@ -59,7 +59,7 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(this).load(aMovie.getPoster_path()).into(target);
         Picasso.with(this).load(aMovie.getBackdrop_path()).into(iv1);
 
-        tvRate.setText(aMovie.getRage());
+        tvRate.setText(aMovie.getRage()+"");
         tvDate.setText(aMovie.getR_date());
         tvOverview.setText(aMovie.getOverview());
 

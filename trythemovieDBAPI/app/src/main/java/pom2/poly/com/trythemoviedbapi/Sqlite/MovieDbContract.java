@@ -69,6 +69,7 @@ public class MovieDbContract {
         public static final String COLUMN_BACK_DROP_SZIE = "backdropsize";
         public static final String COLUMN_BASE_URL = "baseurl";
         public static final String COLUMN_M_ID = "moviewid";
+        public static final String COLUMN_POP = "popularity";
 
         public static Uri buildMovieID(long ID) {
             return ContentUris.withAppendedId(CONTENT_URI, ID);

@@ -28,11 +28,12 @@ public class MovieFactory {
                 Movie m = new Movie(poster_size, base_url, backdrop_size);
                 m.setBackdrop_path(r.getBackdropPath());
                 m.setTitle(r.getTitle());
-                m.setRage(r.getVoteAverage().toString());
+                m.setRage(r.getVoteAverage());
                 m.setOverview(r.getOverview());
                 m.setR_date(r.getReleaseDate());
                 m.setPoster_path(r.getPosterPath());
                 m.setM_id(r.getId().toString());
+                m.setPopularity(r.getPopularity());
                 arListofMovie.add(m);
             }
         }

@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by User on 20/1/2016.
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 7;
 
     static final String DATABASE_NAME = "movie.db";
     public MovieDbHelper(Context context) {
@@ -32,7 +32,8 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieDbContract.MovieEntry.COLUMN_POSTER_PATH+ " TEXT, " +
                 MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH+ " TEXT, " +
                 MovieDbContract.MovieEntry.COLUMN_OVERVIEW+ " TEXT, " +
-                MovieDbContract.MovieEntry.COLUMN_RAGE+ " TEXT , " +
+                MovieDbContract.MovieEntry.COLUMN_RAGE+ " REAL , " +
+                MovieDbContract.MovieEntry.COLUMN_POP+ " REAL , " +
                 MovieDbContract.MovieEntry.COLUMN_R_DATE+ " TEXT, " +
                 MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE+ " TEXT , " +
                 MovieDbContract.MovieEntry.COLUMN_BACK_DROP_SZIE+ " TEXT, " +

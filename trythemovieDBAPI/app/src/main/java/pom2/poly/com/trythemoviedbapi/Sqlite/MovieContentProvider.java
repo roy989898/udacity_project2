@@ -112,8 +112,38 @@ public class MovieContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        throw new UnsupportedOperationException("Not yet implemented");
+        /*switch(sUriMatcher.match(uri)){
+            case FAV:
+                //TODO
+                break;
+            case MOVIE:
+                break;
+            case MOVIE_FAV:
+                //TODO
+                break;
+            case MOVIE_POP:
+                break;
+            case MOVIE_TOP:
+                break;
+            case MOVIE_ID:
+                break;
+
+        }*/
+
+        return null;
+    }
+
+    private Cursor getMovie(String[] projection, String selection,
+                     String[] selectionArgs){
+        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+        return cursor;
+    }
+    private Cursor getMoviewithPOP(String[] projection, String selection,
+                            String[] selectionArgs){
+        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null,null);
+        return cursor;
     }
 
     @Override

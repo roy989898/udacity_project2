@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         cv.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH, movie.getBackdrop_path());
         cv.put(MovieDbContract.MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
         cv.put(MovieDbContract.MovieEntry.COLUMN_RAGE, movie.getRage());
+        cv.put(MovieDbContract.MovieEntry.COLUMN_POP, movie.getPopularity());
         cv.put(MovieDbContract.MovieEntry.COLUMN_R_DATE, movie.getR_date());
         cv.put(MovieDbContract.MovieEntry.COLUMN_M_ID, movie.getM_id());
         cv.put(MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE, 0);

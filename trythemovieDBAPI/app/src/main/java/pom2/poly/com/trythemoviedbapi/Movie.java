@@ -23,12 +23,22 @@ public class Movie implements Parcelable {
     private String poster_path;
     private String backdrop_path;
     private String overview;
-    private String rage;
+    private double rage;
     private String r_date;
     private String poster_size;
     private String backdrop_size;
     private String base_url;
     private String m_id;
+    private double popularity;
+
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public Movie setPopularity(double popularity) {
+        this.popularity = popularity;
+        return this;
+    }
 
     public String getM_id() {
         return m_id;
@@ -53,7 +63,8 @@ public class Movie implements Parcelable {
         this.poster_path = value.getString("poster_path");
         this.backdrop_path = value.getString("backdrop_path");
         this.overview = value.getString("overview");
-        this.rage = value.getString("rage");
+        this.rage = value.getDouble("rage");
+        this.popularity = value.getDouble("popularity");
         this.r_date = value.getString("r_date");
         this.poster_size = value.getString("poster_size");
         this.backdrop_size = value.getString("backdrop_size");
@@ -73,7 +84,8 @@ public class Movie implements Parcelable {
         bundle.putString("poster_path", this.poster_path);
         bundle.putString("backdrop_path", this.backdrop_path);
         bundle.putString("overview", this.overview);
-        bundle.putString("rage", this.rage);
+        bundle.putDouble("rage", this.rage);
+        bundle.putDouble("popularity", this.popularity);
         bundle.putString("r_date", this.r_date);
         bundle.putString("poster_size", this.poster_size);
         bundle.putString("backdrop_size", this.backdrop_size);
@@ -114,11 +126,11 @@ public class Movie implements Parcelable {
         this.r_date = r_date;
     }
 
-    public String getRage() {
+    public double getRage() {
         return rage;
     }
 
-    public void setRage(String rage) {
+    public void setRage(double rage) {
         this.rage = rage;
     }
 
