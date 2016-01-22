@@ -25,19 +25,19 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + MovieDbContract.MovieEntry.TABLE_NAME + " (" +
 
-                MovieDbContract.MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                MovieDbContract.MovieEntry._ID + " INTEGER  AUTOINCREMENT," +
 
                 // the ID of the location entry associated with this weather data
                 MovieDbContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_POSTER_PATH+ " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH+ " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_OVERVIEW+ " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_RAGE+ " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_R_DATE+ " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE+ " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_BACK_DROP_SZIE+ " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_BASE_URL+ " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_M_ID+ " TEXT NOT NULL" +
+                MovieDbContract.MovieEntry.COLUMN_POSTER_PATH+ " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH+ " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_OVERVIEW+ " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_RAGE+ " TEXT , " +
+                MovieDbContract.MovieEntry.COLUMN_R_DATE+ " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE+ " TEXT , " +
+                MovieDbContract.MovieEntry.COLUMN_BACK_DROP_SZIE+ " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_BASE_URL+ " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_M_ID+ " TEXT PRIMARY KEY NOT NULL" +
                 " );";
 
         db.execSQL(SQL_CREATE_FAVOURITE_TABLE);
