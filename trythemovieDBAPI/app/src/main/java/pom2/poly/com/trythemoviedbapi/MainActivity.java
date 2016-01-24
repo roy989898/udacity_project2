@@ -37,7 +37,8 @@ import retrofit2.Retrofit;
 
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int MOVIE_LOADER = 0;
+    private static int MOVIE_POP_LOADER = 0;
+    private static int MOVIE_TOP_LOADER = 1;
     final String IMAGE = "images";
     final String BASE_URL = "base_url";
     final String POSTER_Z = "poster_sizes";
@@ -56,6 +57,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         perf_sort_op = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
         //Toast.makeText(this, perf_sort_op, Toast.LENGTH_SHORT).show();
         updateMovie();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        switch (perf_sort_op) {
+            case Utility.POP_MOVIE:
+                Log.i("loader", "POP_MOVIE");
+                getSupportLoaderManager().initLoader(MOVIE_POP_LOADER, null, this);
+                break;
+            case Utility.TOP_MOVIE:
+                Log.i("loader", "TOP_MOVIE");
+                getSupportLoaderManager().initLoader(MOVIE_TOP_LOADER, null, this);
+                break;
+
+        }
+
     }
 
     @Override
@@ -85,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //new getConfigTask().execute();
         //new getMovieTask().execute(Utility.POP_MOVIE);
 
-        getSupportLoaderManager().initLoader(MOVIE_LOADER,savedInstanceState,this);
+
     }
 
 
@@ -208,19 +226,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
         Loader<Cursor> cursorLoader = null;
-        if(perf_sort_op==null){
+        if (perf_sort_op == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             perf_sort_op = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
         }
         switch (perf_sort_op) {
             case Utility.TOP_MOVIE:
-
+                Log.i("loader", "onCreateLoader-TOP_MOVIE");
                 cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI_TOP, null, null, null, null);
 
                 break;
             case Utility.POP_MOVIE:
-
+                Log.i("loader", "onCreateLoader-POP_MOVIE");
                 cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI_POP, null, null, null, null);
 
                 break;
@@ -230,12 +249,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.i("loader", "onLoadFinished");
         myCursorAdapter.swapCursor(data);
+        //myCursorAdapter.notifyDataSetChanged();
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        Log.i("loader", "onLoaderReset");
         myCursorAdapter.swapCursor(null);
     }
 
