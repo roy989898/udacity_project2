@@ -276,11 +276,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //myCursorAdapter.notifyDataSetChanged();
 //        showCursorContent(data);
 
+        if(myrecycleViewadapter==null){
+            myrecycleViewadapter = new MyRecyclerViewAdapter(data, this);
+            myRecyclerView.setAdapter(myrecycleViewadapter);
+        }else{
+            myrecycleViewadapter.swapCursor(data);
+        }
 
-        myrecycleViewadapter = new MyRecyclerViewAdapter(data, this);
-        myRecyclerView.setAdapter(myrecycleViewadapter);
-        myrecycleViewadapter.notifyDataSetChanged();
-        myRecyclerView.scrollToPosition(3);
+
+
 
 
 

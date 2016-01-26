@@ -27,6 +27,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public Cursor getCursor() {
         return mcursor;
     }
+    public void swapCursor(Cursor d){
+        this.mcursor=d;
+        notifyDataSetChanged();
+    }
 
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
