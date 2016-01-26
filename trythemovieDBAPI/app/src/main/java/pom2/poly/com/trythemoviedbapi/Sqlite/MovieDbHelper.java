@@ -8,9 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by User on 20/1/2016.
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 14;
-
     static final String DATABASE_NAME = "movie.db";
+    private static final int DATABASE_VERSION =20;
+
     public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -29,16 +29,16 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                 // the ID of the location entry associated with this weather data
                 MovieDbContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                MovieDbContract.MovieEntry.COLUMN_POSTER_PATH+ " TEXT, " +
-                MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH+ " TEXT, " +
-                MovieDbContract.MovieEntry.COLUMN_OVERVIEW+ " TEXT, " +
-                MovieDbContract.MovieEntry.COLUMN_RAGE+ " REAL , " +
-                MovieDbContract.MovieEntry.COLUMN_POP+ " REAL , " +
-                MovieDbContract.MovieEntry.COLUMN_R_DATE+ " TEXT, " +
-                MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE+ " TEXT , " +
-                MovieDbContract.MovieEntry.COLUMN_BACK_DROP_SZIE+ " TEXT, " +
-                MovieDbContract.MovieEntry.COLUMN_BASE_URL+ " TEXT, " +
-                MovieDbContract.MovieEntry.COLUMN_M_ID+ " TEXT UNIQUE  NOT NULL" +
+                MovieDbContract.MovieEntry.COLUMN_POSTER_PATH + " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH + " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_OVERVIEW + " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_RAGE + " REAL , " +
+                MovieDbContract.MovieEntry.COLUMN_POP + " REAL , " +
+                MovieDbContract.MovieEntry.COLUMN_R_DATE + " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE + " TEXT , " +
+                MovieDbContract.MovieEntry.COLUMN_BACK_DROP_SZIE + " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_BASE_URL + " TEXT, " +
+                MovieDbContract.MovieEntry.COLUMN_M_ID + " TEXT UNIQUE  NOT NULL" +
                 " );";
 
         db.execSQL(SQL_CREATE_FAVOURITE_TABLE);

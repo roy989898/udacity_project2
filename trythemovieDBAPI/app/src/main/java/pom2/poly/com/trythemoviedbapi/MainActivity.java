@@ -12,12 +12,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,12 +44,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     final String BASE_URL = "base_url";
     final String POSTER_Z = "poster_sizes";
     final String MOVIE_KEY = "getTHeMovie";
-    @Bind(R.id.gridView)
-    GridView gridView;
+    @Bind(R.id.my_recycler_view)
+    RecyclerView myRecyclerView;
+    //    @Bind(R.id.gridView)
+//    GridView gridView;
     private String perf_sort_op;
     private ArrayList<Movie> movieArrayList;
     //private MyArrayAdapter myArrayAdapter;
-    private MyCursorAdapter myCursorAdapter;
+//    private MyCursorAdapter myCursorAdapter;
+    private MyRecyclerViewAdapter myrecycleViewadapter;
+    private StaggeredGridLayoutManager mLayoutManager;
+
+    public static void showCursorContent(Cursor data) {
+        Log.i("showCursorContent", "in");
+        data.move(-1);
+        while (data.moveToNext()) {
+            Log.i("showCursorContent", data.getString(data.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE)));
+        }
+
+    }
 
     @Override
     protected void onStart() {
@@ -93,9 +107,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             movieArrayList = new ArrayList<>();
         }
         //myArrayAdapter = new MyArrayAdapter(this, movieArrayList);
-        myCursorAdapter = new MyCursorAdapter(this, null);
+//        myCursorAdapter = new MyCursorAdapter(this, null);
+
         //gridView.setAdapter(myArrayAdapter);
-        gridView.setAdapter(myCursorAdapter);
+//        gridView.setAdapter(myCursorAdapter);
+        //if the size of the recycle view is fixed,set this, will get optimizations
+//        myRecyclerView.setHasFixedSize(true);
+
+        //se the layout manager,defune the way to show the View iteam
+//        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        myRecyclerView.setLayoutManager(mLayoutManager);
+        //when load finish set the Cursor
+
+
         //TODO click iteam
         //gridView.setOnItemClickListener(this);
 
@@ -106,19 +131,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(MOVIE_KEY, movieArrayList);
     }
 
-
     private void updateMovie() {
         GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask();
         task.execute();
     }
-
 
     //this method use the data from getConfigData and getMovieDatav2 ,to get the MOVIE object array
     private Movie[] getMOvieObject() {
@@ -250,15 +272,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.i("loader", "onLoadFinished");
-        myCursorAdapter.swapCursor(data);
+//        myrecycleViewadapter.swapCursor(data);
         //myCursorAdapter.notifyDataSetChanged();
+//        showCursorContent(data);
+
+
+        myrecycleViewadapter = new MyRecyclerViewAdapter(data, this);
+        myRecyclerView.setAdapter(myrecycleViewadapter);
+        myrecycleViewadapter.notifyDataSetChanged();
+        myRecyclerView.scrollToPosition(3);
+
+
+
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         Log.i("loader", "onLoaderReset");
-        myCursorAdapter.swapCursor(null);
+//        myrecycleViewadapter.swapCursor(null);
     }
 
     class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {

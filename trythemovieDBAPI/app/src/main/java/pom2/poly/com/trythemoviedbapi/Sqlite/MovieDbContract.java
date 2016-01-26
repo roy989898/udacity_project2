@@ -16,7 +16,7 @@ import android.provider.BaseColumns;
 public class MovieDbContract {
 
     public static final String CONTENT_AUTHORITY = "pom2.poly.com.trythemoviedbapi";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" +CONTENT_AUTHORITY);
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_MOVIE = "MOVIE";
     public static final String PATH_FAV = "FAVOURITE";
     public static final String PATH_MOVIE_POP = "MOVIE_POP";
@@ -75,7 +75,7 @@ public class MovieDbContract {
             return ContentUris.withAppendedId(CONTENT_URI, ID);
         }
 
-        public static long getMovieIDfromURI(Uri uri){
+        public static long getMovieIDfromURI(Uri uri) {
             return Long.parseLong(uri.getLastPathSegment());
         }
 

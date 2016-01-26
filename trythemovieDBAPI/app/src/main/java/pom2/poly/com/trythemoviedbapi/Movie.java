@@ -31,24 +31,6 @@ public class Movie implements Parcelable {
     private String m_id;
     private double popularity;
 
-    public double getPopularity() {
-        return popularity;
-    }
-
-    public Movie setPopularity(double popularity) {
-        this.popularity = popularity;
-        return this;
-    }
-
-    public String getM_id() {
-        return m_id;
-    }
-
-    public Movie setM_id(String m_id) {
-        this.m_id = m_id;
-        return this;
-    }
-
     public Movie(String poster_size, String base_url, String backdrop_size) {
         this.poster_size = poster_size;
         this.base_url = base_url;
@@ -70,6 +52,24 @@ public class Movie implements Parcelable {
         this.backdrop_size = value.getString("backdrop_size");
         this.base_url = value.getString("base_url");
 
+    }
+
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public Movie setPopularity(double popularity) {
+        this.popularity = popularity;
+        return this;
+    }
+
+    public String getM_id() {
+        return m_id;
+    }
+
+    public Movie setM_id(String m_id) {
+        this.m_id = m_id;
+        return this;
     }
 
     @Override

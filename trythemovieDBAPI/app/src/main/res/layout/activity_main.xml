@@ -12,9 +12,15 @@
     tools:context="pom2.poly.com.trythemoviedbapi.MainActivity">
 
 
-    <GridView
+    <!--<GridView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/gridView"-->
+        <!--android:numColumns="auto_fit" />-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridView"
-        android:numColumns="auto_fit" />
+        android:scrollbars="vertical" />
+
 </LinearLayout>

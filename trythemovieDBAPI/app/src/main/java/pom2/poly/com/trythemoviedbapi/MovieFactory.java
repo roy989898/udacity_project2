@@ -19,7 +19,7 @@ public class MovieFactory {
         if (config == null || results == null) {
             return null;
         } else {
-            String poster_size = config.getImages().getPosterSizes().get(4);
+            String poster_size = config.getImages().getPosterSizes().get(3);
             String base_url = config.getImages().getBaseUrl();
             String backdrop_size = config.getImages().getBackdropSizes().get(1);
             List<Result> listofResult = results.getResults();
