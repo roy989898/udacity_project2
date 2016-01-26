@@ -18,6 +18,7 @@ import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyHolder> {
     Cursor mcursor;
     Context mcontext;
+    private static MyClickListener myClickListener;
 
     public MyRecyclerViewAdapter(Cursor cursor, Context context) {
         this.mcursor = cursor;
@@ -55,13 +56,28 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return mcursor.getCount();
     }
 
-    public static class MyHolder extends RecyclerView.ViewHolder {
+    public  class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView iv1;
 
         public MyHolder(View itemView) {
             super(itemView);
             iv1 = (ImageView) itemView.findViewById(R.id.iv1_rey);
+            itemView.setOnClickListener(this);
 
         }
+
+        @Override
+        public void onClick(View v) {
+            myClickListener.onItemClick(getPosition(),v);
+        }
+    }
+    public interface MyClickListener {
+         void onItemClick(int position, View v);
+    }
+
+
+
+    public void setOnItemClickListener(MyClickListener myClickListener) {
+        this.myClickListener = myClickListener;
     }
 }

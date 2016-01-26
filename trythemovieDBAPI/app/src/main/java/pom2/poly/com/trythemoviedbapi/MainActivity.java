@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor>,MyRecyclerViewAdapter.MyClickListener {
     private static int MOVIE_POP_LOADER = 0;
     private static int MOVIE_TOP_LOADER = 1;
     final String IMAGE = "images";
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         myRecyclerView.setLayoutManager(mLayoutManager);
+
         //when load finish set the Cursor
 
 
@@ -279,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if(myrecycleViewadapter==null){
             myrecycleViewadapter = new MyRecyclerViewAdapter(data, this);
             myRecyclerView.setAdapter(myrecycleViewadapter);
+            myrecycleViewadapter.setOnItemClickListener(this);
         }else{
             myrecycleViewadapter.swapCursor(data);
         }
@@ -295,6 +298,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onLoaderReset(Loader<Cursor> loader) {
         Log.i("loader", "onLoaderReset");
 //        myrecycleViewadapter.swapCursor(null);
+    }
+
+    @Override
+    public void onItemClick(int position, View v) {
+        Toast.makeText(this,position+"",Toast.LENGTH_SHORT).show();
     }
 
     class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
