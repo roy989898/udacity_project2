@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
     static final String DATABASE_NAME = "movie.db";
-    private static final int DATABASE_VERSION =20;
+    private static final int DATABASE_VERSION =21;
 
     public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -19,7 +19,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create a table to hold favourite.  A favourite consists of the m_id(not the ID in the SQL database)
         final String SQL_CREATE_FAVOURITE_TABLE = "CREATE TABLE " + MovieDbContract.FavouriteEntry.TABLE_NAME + " (" +
-                MovieDbContract.FavouriteEntry._ID + " INTEGER PRIMARY KEY," +
+                MovieDbContract.FavouriteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY + " TEXT NOT NULL" +
                 " );";
 

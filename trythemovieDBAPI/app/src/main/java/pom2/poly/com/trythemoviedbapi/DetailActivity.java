@@ -1,10 +1,15 @@
 package pom2.poly.com.trythemoviedbapi;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -19,8 +24,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class DetailActivity extends AppCompatActivity implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static int CURSORLOADER_ID;
     @Bind(R.id.tvTitle)
     TextView tvTitle;
     @Bind(R.id.iv1)
@@ -35,7 +41,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     LinearLayout lineayout1;
     @Bind(R.id.imb1)
     ImageButton imb1;
-
     private String m_id = null;
 
     @Override
@@ -72,10 +77,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvRate.setText(infBundle.getString(Utility.BUNDLE_KEY_RATE));
         tvDate.setText(infBundle.getString(Utility.BUNDLE_KEY_DATE));
         tvOverview.setText(infBundle.getString(Utility.BUNDLE_KEY_OVERVIEW));
+
         m_id = infBundle.getString(Utility.BUNDLE_KEY_M_ID);
+        CURSORLOADER_ID = Integer.parseInt(m_id);
         imb1.setOnClickListener(this);
 
-
+        getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
     }
 
     @Override
@@ -83,11 +90,37 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.imb1:
 //                Toast.makeText(this,m_id,Toast.LENGTH_SHORT).show();
-                ContentValues cv=new ContentValues();
-                cv.put(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY,Long.parseLong(m_id));
-                getContentResolver().insert(MovieDbContract.FavouriteEntry.CONTENT_URI,cv);
+
+                //insert the m_id to the favourite table
+                ContentValues cv = new ContentValues();
+                cv.put(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY, Long.parseLong(m_id));
+                getContentResolver().insert(MovieDbContract.FavouriteEntry.CONTENT_URI, cv);
 
                 break;
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri uri = MovieDbContract.FavouriteEntry.buildFavouriteWithID(Long.parseLong(m_id));
+        return new CursorLoader(this, uri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        int i = data.getCount();
+        if (i > 0) {
+            //in the favourite table
+            imb1.setImageResource(R.drawable.ic_star_white_36dp);
+        } else {
+            // not in the favourite table
+            imb1.setImageResource(R.drawable.ic_star_black_36dp);
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }

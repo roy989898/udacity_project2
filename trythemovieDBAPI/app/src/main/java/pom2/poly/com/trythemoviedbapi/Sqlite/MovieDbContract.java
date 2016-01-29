@@ -46,10 +46,15 @@ public class MovieDbContract {
         public static Uri buildFavouriteWithID(long m_ID) {
             return CONTENT_URI.buildUpon().appendQueryParameter(QUERY_PARAMETRE,m_ID+"").build();
         }
-
+//return the m_id or -1
         public static long getTheM_IDfromTheURI(Uri uri){
             String m_id=uri.getQueryParameter(QUERY_PARAMETRE);
-            return Long.parseLong(m_id);
+            if(m_id==null){
+                return -1;
+            }else{
+                return Long.parseLong(m_id);
+            }
+
         }
 
 

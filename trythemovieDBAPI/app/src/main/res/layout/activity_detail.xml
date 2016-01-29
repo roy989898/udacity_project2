@@ -16,7 +16,7 @@
         android:id="@+id/imb1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/love_button_background"
+        android:src="@drawable/ic_star_black_36dp"
         android:background="@null"/>
 
     <FrameLayout

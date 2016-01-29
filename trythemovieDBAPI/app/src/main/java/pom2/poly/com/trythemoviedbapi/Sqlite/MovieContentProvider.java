@@ -5,8 +5,11 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
+
+import pom2.poly.com.trythemoviedbapi.Utility;
 
 public class MovieContentProvider extends ContentProvider {
     static final int MOVIE = 100;
@@ -16,6 +19,10 @@ public class MovieContentProvider extends ContentProvider {
     static final int MOVIE_ID = 104;
     static final int FAV = 300;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
+    private static final SQLiteQueryBuilder sFAV_AND_MOVquerybuilder;
+
+
+
     private MovieDbHelper moviedbhelper;
 
     public MovieContentProvider() {
@@ -39,7 +46,6 @@ public class MovieContentProvider extends ContentProvider {
 
         return matcher;
     }
-
 
     @Override
     public String getType(Uri uri) {
@@ -96,7 +102,7 @@ public class MovieContentProvider extends ContentProvider {
             case FAV:
                 //first check if the m_id in the database
                 String selection = MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY + " =? ";
-                String m_id=values.getAsInteger(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY) + "";
+                String m_id = values.getAsInteger(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY) + "";
                 Cursor useforcheckCursor = db.query(MovieDbContract.FavouriteEntry.TABLE_NAME, null, selection, new String[]{m_id}, null, null, null);
                 //if >0,that mean already have the movie in the favouritetable
                 long _fid = 0;
@@ -107,7 +113,7 @@ public class MovieContentProvider extends ContentProvider {
                     _fid = -1;
 
                 setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
-                reuri=MovieDbContract.FavouriteEntry.buildFavouriteWithID(_fid);
+                reuri = MovieDbContract.FavouriteEntry.buildFavouriteWithID(_fid);
                 break;
 
             default:
@@ -124,7 +130,11 @@ public class MovieContentProvider extends ContentProvider {
         moviedbhelper = new MovieDbHelper(getContext());
         return true;
     }
-
+    static {
+        sFAV_AND_MOVquerybuilder=new SQLiteQueryBuilder();
+        sFAV_AND_MOVquerybuilder.setTables(MovieDbContract.FavouriteEntry.TABLE_NAME+" INNER JOIN "+MovieDbContract.MovieEntry.TABLE_NAME+" ON "+MovieDbContract.MovieEntry.TABLE_NAME+"."+MovieDbContract.MovieEntry.COLUMN_M_ID+" = "+
+                MovieDbContract.FavouriteEntry.TABLE_NAME+" . "+ MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY);
+    }
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
@@ -132,8 +142,18 @@ public class MovieContentProvider extends ContentProvider {
         Uri setUri = null;
         switch (sUriMatcher.match(uri)) {
             case FAV:
-                //TODO:FAV query
-                setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
+                Log.i("show_cursor", "in FAV");
+                long m_id=MovieDbContract.FavouriteEntry.getTheM_IDfromTheURI(uri);
+                if(m_id==-1){
+                    //not search with m_id
+                    recursor = getFav(projection, selection, selectionArgs);
+                    setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
+                }else{
+                    //search with m_id
+                    recursor = getFav(projection, MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY+" =? ", new String[]{m_id+""});
+                    setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
+                }
+
                 break;
             case MOVIE:
                 Log.i("show_cursor", "in MOVIE");
@@ -141,8 +161,10 @@ public class MovieContentProvider extends ContentProvider {
                 setUri = MovieDbContract.MovieEntry.CONTENT_URI;
                 break;
             case MOVIE_FAV:
-                //TODO:Movie with FAVquery
-                setUri = MovieDbContract.MovieEntry.CONTENT_URI;
+                //TODO:Movie with FAVquery,not yet check ok
+                Log.i("show_cursor", "in MOVIE_FAV");
+                recursor=sFAV_AND_MOVquerybuilder.query(moviedbhelper.getReadableDatabase(),null,null,null,null,null,null);
+                setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
                 break;
             case MOVIE_POP:
                 Log.i("show_cursor", "in MOVIE_POP");
@@ -167,6 +189,13 @@ public class MovieContentProvider extends ContentProvider {
         recursor.setNotificationUri(getContext().getContentResolver(), setUri);
 
         return recursor;
+    }
+
+    private Cursor getFav(String[] projection, String selection,
+                          String[] selectionArgs) {
+        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+        Cursor cursor = db.query(MovieDbContract.FavouriteEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+        return cursor;
     }
 
     private Cursor getMovie(String[] projection, String selection,
