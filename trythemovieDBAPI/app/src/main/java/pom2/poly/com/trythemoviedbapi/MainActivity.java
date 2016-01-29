@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor>,MyRecyclerViewAdapter.MyClickListener {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyRecyclerViewAdapter.MyClickListener {
     private static int MOVIE_POP_LOADER = 0;
     private static int MOVIE_TOP_LOADER = 1;
     final String IMAGE = "images";
@@ -47,12 +46,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     final String MOVIE_KEY = "getTHeMovie";
     @Bind(R.id.my_recycler_view)
     RecyclerView myRecyclerView;
-    //    @Bind(R.id.gridView)
-//    GridView gridView;
+
     private String perf_sort_op;
     private ArrayList<Movie> movieArrayList;
-    //private MyArrayAdapter myArrayAdapter;
-//    private MyCursorAdapter myCursorAdapter;
+
     private MyRecyclerViewAdapter myrecycleViewadapter;
     private StaggeredGridLayoutManager mLayoutManager;
 
@@ -154,12 +151,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        /*Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(DetailActivity.class.getName(), myArrayAdapter.getItem(position));
-        startActivity(intent);*/
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -278,18 +269,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //myCursorAdapter.notifyDataSetChanged();
 //        showCursorContent(data);
 
-        if(myrecycleViewadapter==null){
+        if (myrecycleViewadapter == null) {
             myrecycleViewadapter = new MyRecyclerViewAdapter(data, this);
             myRecyclerView.setAdapter(myrecycleViewadapter);
             myrecycleViewadapter.setOnItemClickListener(this);
-        }else{
+        } else {
             myrecycleViewadapter.swapCursor(data);
         }
-
-
-
-
-
 
 
     }
@@ -302,7 +288,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(int position, View v) {
-        Toast.makeText(this,position+"",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, position + "", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DetailActivity.class);
+        Cursor cursor = myrecycleViewadapter.getCursor();
+        cursor.moveToPosition(position);
+
+        intent.putExtras(putCursordatainToBundle(cursor));
+
+        startActivity(intent);
+    }
+
+    private Bundle putCursordatainToBundle(Cursor c) {
+        String title = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE));
+        String poster_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH));
+        String rate = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE));
+        String date = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_R_DATE));
+        String overview = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_OVERVIEW));
+        String background_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH));
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Utility.BUNDLE_KEY_TITLE, title);
+        bundle.putString(Utility.BUNDLE_KEY_POSTERPATH, poster_path);
+        bundle.putString(Utility.BUNDLE_KEY_RATE, rate);
+        bundle.putString(Utility.BUNDLE_KEY_DATE, date);
+        bundle.putString(Utility.BUNDLE_KEY_OVERVIEW, overview);
+        bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
+
+        return bundle;
     }
 
     class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
