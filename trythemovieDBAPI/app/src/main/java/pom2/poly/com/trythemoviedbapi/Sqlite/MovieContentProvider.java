@@ -247,9 +247,18 @@ public class MovieContentProvider extends ContentProvider {
                 break;
 
             case FAV:
-                //TODO: delete the FAV
-                //return null;
-                setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
+                long m_id=MovieDbContract.FavouriteEntry.getTheM_IDfromTheURI(uri);
+                if(m_id==-1){
+                    //not delete with m_id(delete whole table)
+                    state = db.delete(MovieDbContract.FavouriteEntry.TABLE_NAME, null, null);
+
+                    setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
+                }else{
+                    //delete with m_id(delete one row)
+                    state = db.delete(MovieDbContract.FavouriteEntry.TABLE_NAME, MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY+" =? ", new String[]{m_id+""});
+
+                    setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
+                }
                 break;
 
             default:

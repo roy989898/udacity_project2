@@ -91,10 +91,24 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.imb1:
 //                Toast.makeText(this,m_id,Toast.LENGTH_SHORT).show();
 
-                //insert the m_id to the favourite table
-                ContentValues cv = new ContentValues();
-                cv.put(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY, Long.parseLong(m_id));
-                getContentResolver().insert(MovieDbContract.FavouriteEntry.CONTENT_URI, cv);
+
+                if(imb1.getTag().equals("R.drawable.ic_star_white_36dp")){
+                    //the star button is white now
+
+                    //delete the  m_id from the favourite table
+
+                    getContentResolver().delete(MovieDbContract.FavouriteEntry.buildFavouriteWithID(Long.parseLong(m_id)),null,null);
+
+                    imb1.setImageResource(R.drawable.ic_star_black_36dp);
+                }else{
+                    //the star button is black now
+                    //insert the m_id to the favourite table
+                    ContentValues cv = new ContentValues();
+                    cv.put(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY, Long.parseLong(m_id));
+                    getContentResolver().insert(MovieDbContract.FavouriteEntry.CONTENT_URI, cv);
+
+                    imb1.setImageResource(R.drawable.ic_star_white_36dp);
+                }
 
                 break;
         }
@@ -112,9 +126,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         if (i > 0) {
             //in the favourite table
             imb1.setImageResource(R.drawable.ic_star_white_36dp);
+            imb1.setTag("R.drawable.ic_star_white_36dp");
         } else {
             // not in the favourite table
             imb1.setImageResource(R.drawable.ic_star_black_36dp);
+            imb1.setTag("(R.drawable.ic_star_black_36dp");
         }
 
     }
