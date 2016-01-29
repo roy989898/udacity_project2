@@ -94,9 +94,20 @@ public class MovieContentProvider extends ContentProvider {
                 break;
 
             case FAV:
-                //TODO
-                //return null;
+                //first check if the m_id in the database
+                String selection = MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY + " =? ";
+                String m_id=values.getAsInteger(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY) + "";
+                Cursor useforcheckCursor = db.query(MovieDbContract.FavouriteEntry.TABLE_NAME, null, selection, new String[]{m_id}, null, null, null);
+                //if >0,that mean already have the movie in the favouritetable
+                long _fid = 0;
+
+                if (useforcheckCursor.getCount() == 0)
+                    _fid = db.insert(MovieDbContract.FavouriteEntry.TABLE_NAME, null, values);
+                else
+                    _fid = -1;
+
                 setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
+                reuri=MovieDbContract.FavouriteEntry.buildFavouriteWithID(_fid);
                 break;
 
             default:

@@ -305,15 +305,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         String date = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_R_DATE));
         String overview = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_OVERVIEW));
         String background_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH));
+        String m_id = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID));
 
         Bundle bundle = new Bundle();
+
         bundle.putString(Utility.BUNDLE_KEY_TITLE, title);
         bundle.putString(Utility.BUNDLE_KEY_POSTERPATH, poster_path);
         bundle.putString(Utility.BUNDLE_KEY_RATE, rate);
         bundle.putString(Utility.BUNDLE_KEY_DATE, date);
         bundle.putString(Utility.BUNDLE_KEY_OVERVIEW, overview);
         bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
-
+        bundle.putString(Utility.BUNDLE_KEY_M_ID, m_id);
         return bundle;
     }
 

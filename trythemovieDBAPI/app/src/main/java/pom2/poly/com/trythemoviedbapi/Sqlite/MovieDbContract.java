@@ -32,6 +32,7 @@ public class MovieDbContract {
         //define the return type of content provider
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FAV;//for multiple item
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FAV;
+        public static final String QUERY_PARAMETRE = "m_id";
 
 
         //SQLite part
@@ -42,6 +43,14 @@ public class MovieDbContract {
         public static final String COLUMN_MOVIE_KEY = "movie_id";
 
         //SQLite part
+        public static Uri buildFavouriteWithID(long m_ID) {
+            return CONTENT_URI.buildUpon().appendQueryParameter(QUERY_PARAMETRE,m_ID+"").build();
+        }
+
+        public static long getTheM_IDfromTheURI(Uri uri){
+            String m_id=uri.getQueryParameter(QUERY_PARAMETRE);
+            return Long.parseLong(m_id);
+        }
 
 
     }
@@ -74,6 +83,7 @@ public class MovieDbContract {
         public static Uri buildMovieID(long ID) {
             return ContentUris.withAppendedId(CONTENT_URI, ID);
         }
+
 
         public static long getMovieIDfromURI(Uri uri) {
             return Long.parseLong(uri.getLastPathSegment());

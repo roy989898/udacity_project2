@@ -11,7 +11,7 @@ public class Utility {
     static final String BUNDLE_KEY_POSTERPATH = "bundleposterpath";
     static final String BUNDLE_KEY_RATE = "bundlerate";
     static final String BUNDLE_KEY_DATE = "bundledate";
-
+    static final String BUNDLE_KEY_M_ID = "mid";
     static final String BUNDLE_KEY_OVERVIEW = "bundleoverview";
     static final String BUNDLE_KEY_BACKGROUNDPATH = "bundlebackgroundpath";
 }

@@ -1,5 +1,6 @@
 package pom2.poly.com.trythemoviedbapi;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import com.squareup.picasso.Target;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +35,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     LinearLayout lineayout1;
     @Bind(R.id.imb1)
     ImageButton imb1;
+
+    private String m_id = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvRate.setText(infBundle.getString(Utility.BUNDLE_KEY_RATE));
         tvDate.setText(infBundle.getString(Utility.BUNDLE_KEY_DATE));
         tvOverview.setText(infBundle.getString(Utility.BUNDLE_KEY_OVERVIEW));
-
+        m_id = infBundle.getString(Utility.BUNDLE_KEY_M_ID);
         imb1.setOnClickListener(this);
 
 
@@ -76,6 +80,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imb1:
+//                Toast.makeText(this,m_id,Toast.LENGTH_SHORT).show();
+                ContentValues cv=new ContentValues();
+                cv.put(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY,Long.parseLong(m_id));
+                getContentResolver().insert(MovieDbContract.FavouriteEntry.CONTENT_URI,cv);
 
+                break;
+        }
     }
 }
