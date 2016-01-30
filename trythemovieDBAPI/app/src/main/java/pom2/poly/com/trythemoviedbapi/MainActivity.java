@@ -28,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.APIService;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Config;
+import pom2.poly.com.trythemoviedbapi.MovieAPI.MovieIDResult.MovieIdResult;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Results;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbHelper;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Bind(R.id.my_recycler_view)
     RecyclerView myRecyclerView;
 
-    private String perf_sort_op;
+    private String perf_sort_pop_top_fav;
     private String old_perf_sort_op;
     private ArrayList<Movie> movieArrayList;
 
@@ -68,14 +69,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onStart();
         //get the new setting
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        perf_sort_op = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
+        perf_sort_pop_top_fav = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
         //Toast.makeText(this, perf_sort_op, Toast.LENGTH_SHORT).show();
 
         //get the old setting
         SharedPreferences old_sharedPref = getPreferences(Context.MODE_PRIVATE);
         old_perf_sort_op = old_sharedPref.getString(getResources().getString(R.string.old_pref_sort__key), "pop");
 
-        if (!perf_sort_op.equals(old_perf_sort_op)) {
+        if (!perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
             updateMovie();
         }
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onResume() {
         super.onResume();
-        switch (perf_sort_op) {
+        switch (perf_sort_pop_top_fav) {
             case Utility.POP_MOVIE:
                 Log.i("loader", "POP_MOVIE");
                 getSupportLoaderManager().initLoader(MOVIE_POP_LOADER, null, this);
@@ -155,9 +156,82 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private Movie[] getMOvieObject() {
 
         Config configr = getConfigData();
-        Results result1 = getMovieDatav2(perf_sort_op);
-        return MovieFactory.startMakeMovieArray(configr, result1);
+        if(!perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE)){
+            //select top or pop int the setting
+            Results result1 = getMovieDatav2(perf_sort_pop_top_fav);
+            return MovieFactory.startMakeMovieArray(configr, result1);
+        }else{
+            //select Favourite in the setting
+            //TODO
+            MovieIdResult[] mra=getMviedResult();
+            return MovieFactory.startMakeMovieArrayfromMovideResult(configr, mra);
+        }
 
+
+
+    }
+    private Results getMovieDatav2(String topOrPop) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.themoviedb.org")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        APIService service = retrofit.create(APIService.class);
+        Call<Results> callResults = null;
+        switch (topOrPop) {
+            case Utility.POP_MOVIE:
+                callResults = service.loadPopMovie();
+                break;
+
+            case Utility.TOP_MOVIE:
+                callResults = service.loadTopMovie();
+                break;
+
+        }
+
+        Response<Results> results = null;
+        try {
+            results = callResults.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (results != null) {
+            return results.body();
+        } else {
+            return null;
+        }
+    }
+
+    private MovieIdResult[] getMviedResult() {
+        //step1:get the favourited m_id
+        ArrayList<MovieIdResult> mrArraylist=new ArrayList<>();
+        Cursor m_idCursor=getContentResolver().query(MovieDbContract.FavouriteEntry.CONTENT_URI, null, null, null, null);
+        //step2:use the favouriteed m_id to get the MovieIdResult
+        if(m_idCursor==null){
+            return null;
+        }else{
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.themoviedb.org")
+                    .addConverterFactory(GsonConverterFactory.create()).build();
+
+            APIService service = retrofit.create(APIService.class);
+            m_idCursor.moveToPosition(-1);
+           while (m_idCursor.moveToNext()){
+                int c_index=m_idCursor.getColumnIndex(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY);
+                String m_id=m_idCursor.getString(c_index);
+                Call<MovieIdResult> callMovieResult = service.LoadSingleFavouriteMovie(m_id);
+                try {
+                    Response<MovieIdResult> responseMovieResult = callMovieResult.execute();
+                    MovieIdResult movieResult = responseMovieResult.body();
+                    mrArraylist.add(movieResult);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+            }
+            MovieIdResult[] mrArray=new MovieIdResult[mrArraylist.size()];
+            return mrArraylist.toArray(mrArray);
+        }
 
     }
 
@@ -200,37 +274,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private Results getMovieDatav2(String topOrPop) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.themoviedb.org")
-                .addConverterFactory(GsonConverterFactory.create()).build();
 
-        APIService service = retrofit.create(APIService.class);
-        Call<Results> callResults = null;
-        switch (topOrPop) {
-            case Utility.POP_MOVIE:
-                callResults = service.loadPopMovie();
-                break;
-
-            case Utility.TOP_MOVIE:
-                callResults = service.loadTopMovie();
-                break;
-
-        }
-
-        Response<Results> results = null;
-        try {
-            results = callResults.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (results != null) {
-            return results.body();
-        } else {
-            return null;
-        }
-    }
 
     private Uri insertIntoContntProvider(Movie movie) {
         ContentValues cv = new ContentValues();
@@ -253,11 +297,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         Loader<Cursor> cursorLoader = null;
-        if (perf_sort_op == null) {
+        if (perf_sort_pop_top_fav == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            perf_sort_op = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
+            perf_sort_pop_top_fav = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
         }
-        switch (perf_sort_op) {
+        switch (perf_sort_pop_top_fav) {
             case Utility.TOP_MOVIE:
                 Log.i("loader", "onCreateLoader-TOP_MOVIE");
                 cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI_TOP, null, null, null, null);
@@ -360,10 +404,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
 
             //after update make the old_perf_sort_op and  perf_sort_op be the same value
-            if (!old_perf_sort_op.equals(perf_sort_op)) {
+            if (!old_perf_sort_op.equals(perf_sort_pop_top_fav)) {
                 SharedPreferences sharePreference = getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharePreference.edit();
-                editor.putString(getResources().getString(R.string.old_pref_sort__key), perf_sort_op);
+                editor.putString(getResources().getString(R.string.old_pref_sort__key), perf_sort_pop_top_fav);
                 editor.commit();
             }
 

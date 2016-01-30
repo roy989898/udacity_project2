@@ -6,7 +6,7 @@ package pom2.poly.com.trythemoviedbapi;
 public class Utility {
     static final String POP_MOVIE = "pop";
     static final String TOP_MOVIE = "top";
-
+    static final String FAV_MOVIE = "fav";
     static final String BUNDLE_KEY_TITLE = "bundletitle";
     static final String BUNDLE_KEY_POSTERPATH = "bundleposterpath";
     static final String BUNDLE_KEY_RATE = "bundlerate";

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Config;
+import pom2.poly.com.trythemoviedbapi.MovieAPI.MovieIDResult.MovieIdResult;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Result;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.Results;
 
@@ -41,5 +42,33 @@ public class MovieFactory {
         arListofMovie.toArray(movieArr);
 
         return movieArr;
+    }
+
+
+    public static Movie[] startMakeMovieArrayfromMovideResult(Config config, MovieIdResult[] mra) {
+
+        ArrayList<Movie> arListofMovie = new ArrayList<>();
+        if (config == null || mra == null) {
+            return null;
+        } else {
+            String poster_size = config.getImages().getPosterSizes().get(3);
+            String base_url = config.getImages().getBaseUrl();
+            String backdrop_size = config.getImages().getBackdropSizes().get(1);
+            for (MovieIdResult mr:mra) {
+                Movie m = new Movie(poster_size, base_url, backdrop_size);
+                m.setTitle(mr.getTitle());
+                m.setPoster_path(mr.getPosterPath());
+                m.setBackdrop_path(mr.getBackdropPath());
+                m.setOverview(mr.getOverview());
+                m.setRage(mr.getVoteAverage());
+                m.setR_date(mr.getReleaseDate());
+                m.setM_id(mr.getId().toString());
+                m.setPopularity(mr.getPopularity());
+                arListofMovie.add(m);
+            }
+            Movie[] movieArr = new Movie[arListofMovie.size()];
+            arListofMovie.toArray(movieArr);
+            return movieArr;
+        }
     }
 }
