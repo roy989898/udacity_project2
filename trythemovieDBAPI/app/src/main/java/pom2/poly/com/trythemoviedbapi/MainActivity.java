@@ -41,6 +41,7 @@ import retrofit2.Retrofit;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyRecyclerViewAdapter.MyClickListener {
     private static int MOVIE_POP_LOADER = 0;
     private static int MOVIE_TOP_LOADER = 1;
+    private static int MOVIE_FAV_LOADER = 2;
     final String IMAGE = "images";
     final String BASE_URL = "base_url";
     final String POSTER_Z = "poster_sizes";
@@ -91,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getSupportLoaderManager().initLoader(MOVIE_POP_LOADER, null, this);
                 break;
             case Utility.TOP_MOVIE:
+                Log.i("loader", "TOP_MOVIE");
+                getSupportLoaderManager().initLoader(MOVIE_TOP_LOADER, null, this);
+                break;
+            case Utility.FAV_MOVIE:
                 Log.i("loader", "TOP_MOVIE");
                 getSupportLoaderManager().initLoader(MOVIE_TOP_LOADER, null, this);
                 break;
@@ -310,6 +315,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case Utility.POP_MOVIE:
                 Log.i("loader", "onCreateLoader-POP_MOVIE");
                 cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI_POP, null, null, null, null);
+
+                break;
+            case Utility.FAV_MOVIE:
+                Log.i("loader", "onCreateLoader-FAV_MOVIE");
+                cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI, null, null, null, null);
 
                 break;
         }
