@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private String perf_sort_pop_top_fav;
     private String old_perf_sort_op;
-    private ArrayList<Movie> movieArrayList;
+//    private ArrayList<Movie> movieArrayList;
 
     private MyRecyclerViewAdapter myrecycleViewadapter;
     private StaggeredGridLayoutManager mLayoutManager;
@@ -115,11 +115,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //S
 
 
-        if (savedInstanceState != null) {
+        /*if (savedInstanceState != null) {
             movieArrayList = (ArrayList<Movie>) savedInstanceState.get(MOVIE_KEY);
         } else {
             movieArrayList = new ArrayList<>();
-        }
+        }*/
         //myArrayAdapter = new MyArrayAdapter(this, movieArrayList);
 //        myCursorAdapter = new MyCursorAdapter(this, null);
 
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(MOVIE_KEY, movieArrayList);
+//        outState.putParcelableArrayList(MOVIE_KEY, movieArrayList);
     }
 
     private void updateMovie() {
@@ -404,12 +404,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         protected void onPostExecute(Movie[] movieArray) {
             super.onPostExecute(movieArray);
             //Todo delete the Array adapter
-            if (movieArray != null) {
+            /*if (movieArray != null) {
                 Log.i("GdataFromMOVIEDBtask", "in onPostExecute");
                 movieArrayList.clear();
                 movieArrayList.addAll(Arrays.asList(movieArray));
                 //myArrayAdapter.notifyDataSetChanged();
-            }
+            }*/
             //for test the ContentProvider only
             //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
 
