@@ -92,15 +92,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 //                Toast.makeText(this,m_id,Toast.LENGTH_SHORT).show();
 
 
-                if(imb1.getTag().equals("R.drawable.ic_star_white_36dp")){
+                if (imb1.getTag().equals("R.drawable.ic_star_white_36dp")) {
                     //the star button is white now
 
                     //delete the  m_id from the favourite table
 
-                    getContentResolver().delete(MovieDbContract.FavouriteEntry.buildFavouriteWithID(Long.parseLong(m_id)),null,null);
+                    getContentResolver().delete(MovieDbContract.FavouriteEntry.buildFavouriteWithID(Long.parseLong(m_id)), null, null);
 
                     imb1.setImageResource(R.drawable.ic_star_black_36dp);
-                }else{
+                } else {
                     //the star button is black now
                     //insert the m_id to the favourite table
                     ContentValues cv = new ContentValues();

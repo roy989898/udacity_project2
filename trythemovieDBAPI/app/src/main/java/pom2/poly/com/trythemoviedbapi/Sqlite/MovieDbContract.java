@@ -44,14 +44,15 @@ public class MovieDbContract {
 
         //SQLite part
         public static Uri buildFavouriteWithID(long m_ID) {
-            return CONTENT_URI.buildUpon().appendQueryParameter(QUERY_PARAMETRE,m_ID+"").build();
+            return CONTENT_URI.buildUpon().appendQueryParameter(QUERY_PARAMETRE, m_ID + "").build();
         }
-//return the m_id or -1
-        public static long getTheM_IDfromTheURI(Uri uri){
-            String m_id=uri.getQueryParameter(QUERY_PARAMETRE);
-            if(m_id==null){
+
+        //return the m_id or -1
+        public static long getTheM_IDfromTheURI(Uri uri) {
+            String m_id = uri.getQueryParameter(QUERY_PARAMETRE);
+            if (m_id == null) {
                 return -1;
-            }else{
+            } else {
                 return Long.parseLong(m_id);
             }
 

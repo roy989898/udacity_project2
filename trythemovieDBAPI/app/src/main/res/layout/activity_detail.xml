@@ -16,8 +16,8 @@
         android:id="@+id/imb1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_star_black_36dp"
-        android:background="@null"/>
+        android:background="@null"
+        android:src="@drawable/ic_star_black_36dp" />
 
     <FrameLayout
         android:layout_width="match_parent"

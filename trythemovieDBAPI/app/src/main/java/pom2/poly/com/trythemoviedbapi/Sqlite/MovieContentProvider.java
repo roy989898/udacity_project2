@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
-import pom2.poly.com.trythemoviedbapi.Utility;
-
 public class MovieContentProvider extends ContentProvider {
     static final int MOVIE = 100;
     static final int MOVIE_POP = 101;
@@ -21,7 +19,11 @@ public class MovieContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder sFAV_AND_MOVquerybuilder;
 
-
+    static {
+        sFAV_AND_MOVquerybuilder = new SQLiteQueryBuilder();
+        sFAV_AND_MOVquerybuilder.setTables(MovieDbContract.FavouriteEntry.TABLE_NAME + " INNER JOIN " + MovieDbContract.MovieEntry.TABLE_NAME + " ON " + MovieDbContract.MovieEntry.TABLE_NAME + "." + MovieDbContract.MovieEntry.COLUMN_M_ID + " = " +
+                MovieDbContract.FavouriteEntry.TABLE_NAME + " . " + MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY);
+    }
 
     private MovieDbHelper moviedbhelper;
 
@@ -130,11 +132,7 @@ public class MovieContentProvider extends ContentProvider {
         moviedbhelper = new MovieDbHelper(getContext());
         return true;
     }
-    static {
-        sFAV_AND_MOVquerybuilder=new SQLiteQueryBuilder();
-        sFAV_AND_MOVquerybuilder.setTables(MovieDbContract.FavouriteEntry.TABLE_NAME+" INNER JOIN "+MovieDbContract.MovieEntry.TABLE_NAME+" ON "+MovieDbContract.MovieEntry.TABLE_NAME+"."+MovieDbContract.MovieEntry.COLUMN_M_ID+" = "+
-                MovieDbContract.FavouriteEntry.TABLE_NAME+" . "+ MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY);
-    }
+
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
@@ -143,14 +141,14 @@ public class MovieContentProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case FAV:
                 Log.i("show_cursor", "in FAV");
-                long m_id=MovieDbContract.FavouriteEntry.getTheM_IDfromTheURI(uri);
-                if(m_id==-1){
+                long m_id = MovieDbContract.FavouriteEntry.getTheM_IDfromTheURI(uri);
+                if (m_id == -1) {
                     //not search with m_id
                     recursor = getFav(projection, selection, selectionArgs);
                     setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
-                }else{
+                } else {
                     //search with m_id
-                    recursor = getFav(projection, MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY+" =? ", new String[]{m_id+""});
+                    recursor = getFav(projection, MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY + " =? ", new String[]{m_id + ""});
                     setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
                 }
 
@@ -163,7 +161,7 @@ public class MovieContentProvider extends ContentProvider {
             case MOVIE_FAV:
                 //TODO:Movie with FAVquery,not yet check ok
                 Log.i("show_cursor", "in MOVIE_FAV");
-                recursor=sFAV_AND_MOVquerybuilder.query(moviedbhelper.getReadableDatabase(),null,null,null,null,null,null);
+                recursor = sFAV_AND_MOVquerybuilder.query(moviedbhelper.getReadableDatabase(), null, null, null, null, null, null);
                 setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
                 break;
             case MOVIE_POP:
@@ -247,15 +245,15 @@ public class MovieContentProvider extends ContentProvider {
                 break;
 
             case FAV:
-                long m_id=MovieDbContract.FavouriteEntry.getTheM_IDfromTheURI(uri);
-                if(m_id==-1){
+                long m_id = MovieDbContract.FavouriteEntry.getTheM_IDfromTheURI(uri);
+                if (m_id == -1) {
                     //not delete with m_id(delete whole table)
                     state = db.delete(MovieDbContract.FavouriteEntry.TABLE_NAME, null, null);
 
                     setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
-                }else{
+                } else {
                     //delete with m_id(delete one row)
-                    state = db.delete(MovieDbContract.FavouriteEntry.TABLE_NAME, MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY+" =? ", new String[]{m_id+""});
+                    state = db.delete(MovieDbContract.FavouriteEntry.TABLE_NAME, MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY + " =? ", new String[]{m_id + ""});
 
                     setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
                 }

@@ -8,5 +8,5 @@
     <string name="old_pref_sort__key">o_perf_sort</string>
     <string name="most_popular">Most popular</string>
     <string name="highest_rated">Highest-rated</string>
-
+    <string name="user_favourite">Favourite</string>
 </resources>
