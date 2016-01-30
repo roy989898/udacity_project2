@@ -1,6 +1,7 @@
 package pom2.poly.com.trythemoviedbapi;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     RecyclerView myRecyclerView;
 
     private String perf_sort_op;
+    private String old_perf_sort_op;
     private ArrayList<Movie> movieArrayList;
 
     private MyRecyclerViewAdapter myrecycleViewadapter;
@@ -64,10 +66,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onStart() {
         super.onStart();
+        //get the new setting
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         perf_sort_op = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
         //Toast.makeText(this, perf_sort_op, Toast.LENGTH_SHORT).show();
-        updateMovie();
+
+        //get the old setting
+        SharedPreferences old_sharedPref = getPreferences(Context.MODE_PRIVATE);
+        old_perf_sort_op = old_sharedPref.getString(getResources().getString(R.string.old_pref_sort__key), "pop");
+
+        if (!perf_sort_op.equals(old_perf_sort_op)) {
+            updateMovie();
+        }
+
     }
 
     @Override
@@ -322,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         @Override
         protected Movie[] doInBackground(Void... voids) {
             //delete the old record first,in the moviw table
-            getContentResolver().delete(MovieDbContract.MovieEntry.CONTENT_URI,null,null);
+            getContentResolver().delete(MovieDbContract.MovieEntry.CONTENT_URI, null, null);
 
             //get the new data and insert in to the SQL table
             Movie[] movieArray = getMOvieObject();
@@ -347,6 +358,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
             //for test the ContentProvider only
             //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
+
+            //after update make the old_perf_sort_op and  perf_sort_op be the same value
+            if (!old_perf_sort_op.equals(perf_sort_op)) {
+                SharedPreferences sharePreference = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharePreference.edit();
+                editor.putString(getResources().getString(R.string.old_pref_sort__key), perf_sort_op);
+                editor.commit();
+            }
 
 
         }
