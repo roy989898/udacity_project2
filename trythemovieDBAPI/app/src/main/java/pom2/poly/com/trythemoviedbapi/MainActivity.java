@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -322,6 +321,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
         @Override
         protected Movie[] doInBackground(Void... voids) {
+            //delete the old record first,in the moviw table
+            getContentResolver().delete(MovieDbContract.MovieEntry.CONTENT_URI,null,null);
+
+            //get the new data and insert in to the SQL table
             Movie[] movieArray = getMOvieObject();
             for (Movie m : movieArray) {
                 insertIntoContntProvider(m);
