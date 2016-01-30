@@ -124,6 +124,7 @@ public class MovieContentProvider extends ContentProvider {
 
 
         getContext().getContentResolver().notifyChange(setUri, null);
+
         return reuri;
     }
 
@@ -193,6 +194,7 @@ public class MovieContentProvider extends ContentProvider {
                           String[] selectionArgs) {
         SQLiteDatabase db = moviedbhelper.getReadableDatabase();
         Cursor cursor = db.query(MovieDbContract.FavouriteEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+        
         return cursor;
     }
 
@@ -200,6 +202,7 @@ public class MovieContentProvider extends ContentProvider {
                             String[] selectionArgs) {
         SQLiteDatabase db = moviedbhelper.getReadableDatabase();
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+
         return cursor;
     }
 
@@ -207,6 +210,7 @@ public class MovieContentProvider extends ContentProvider {
                                    String[] selectionArgs) {
         SQLiteDatabase db = moviedbhelper.getReadableDatabase();
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, MovieDbContract.MovieEntry.COLUMN_POP + " DESC");
+
         return cursor;
     }
 
@@ -214,12 +218,14 @@ public class MovieContentProvider extends ContentProvider {
                                    String[] selectionArgs) {
         SQLiteDatabase db = moviedbhelper.getReadableDatabase();
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+
         return cursor;
     }
 
     private Cursor getMoviewithID(String[] projection, long m_id) {
         SQLiteDatabase db = moviedbhelper.getReadableDatabase();
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, MovieDbContract.MovieEntry.COLUMN_M_ID + " =?", new String[]{m_id + ""}, null, null, MovieDbContract.MovieEntry.COLUMN_RAGE + " DESC");
+
         return cursor;
     }
 
@@ -263,8 +269,9 @@ public class MovieContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        if (state != 0)
+        if (state != 0){}
             getContext().getContentResolver().notifyChange(setUri, null);
+
         return state;
     }
 }

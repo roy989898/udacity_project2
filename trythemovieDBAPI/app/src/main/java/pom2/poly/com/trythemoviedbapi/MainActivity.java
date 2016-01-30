@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SharedPreferences old_sharedPref = getPreferences(Context.MODE_PRIVATE);
         old_perf_sort_op = old_sharedPref.getString(getResources().getString(R.string.old_pref_sort__key), "pop");
 
-        if (!perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
+        if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE)||!perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
             updateMovie();
         }
 
