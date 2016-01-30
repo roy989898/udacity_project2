@@ -18,6 +18,7 @@ public class MovieContentProvider extends ContentProvider {
     static final int FAV = 300;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder sFAV_AND_MOVquerybuilder;
+    private  SQLiteDatabase db ;
 
     static {
         sFAV_AND_MOVquerybuilder = new SQLiteQueryBuilder();
@@ -131,6 +132,7 @@ public class MovieContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         moviedbhelper = new MovieDbHelper(getContext());
+        db= moviedbhelper.getReadableDatabase();
         return true;
     }
 
@@ -162,7 +164,7 @@ public class MovieContentProvider extends ContentProvider {
             case MOVIE_FAV:
                 //TODO:Movie with FAVquery,not yet check ok
                 Log.i("show_cursor", "in MOVIE_FAV");
-                recursor = sFAV_AND_MOVquerybuilder.query(moviedbhelper.getReadableDatabase(), null, null, null, null, null, null);
+                recursor = sFAV_AND_MOVquerybuilder.query(db, null, null, null, null, null, null);
                 setUri = MovieDbContract.FavouriteEntry.CONTENT_URI;
                 break;
             case MOVIE_POP:
@@ -192,15 +194,15 @@ public class MovieContentProvider extends ContentProvider {
 
     private Cursor getFav(String[] projection, String selection,
                           String[] selectionArgs) {
-        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+
         Cursor cursor = db.query(MovieDbContract.FavouriteEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
-        
+
         return cursor;
     }
 
     private Cursor getMovie(String[] projection, String selection,
                             String[] selectionArgs) {
-        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
 
         return cursor;
@@ -208,7 +210,7 @@ public class MovieContentProvider extends ContentProvider {
 
     private Cursor getMoviewithPOP(String[] projection, String selection,
                                    String[] selectionArgs) {
-        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, MovieDbContract.MovieEntry.COLUMN_POP + " DESC");
 
         return cursor;
@@ -216,14 +218,14 @@ public class MovieContentProvider extends ContentProvider {
 
     private Cursor getMoviewithTOP(String[] projection, String selection,
                                    String[] selectionArgs) {
-        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
 
         return cursor;
     }
 
     private Cursor getMoviewithID(String[] projection, long m_id) {
-        SQLiteDatabase db = moviedbhelper.getReadableDatabase();
+
         Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, MovieDbContract.MovieEntry.COLUMN_M_ID + " =?", new String[]{m_id + ""}, null, null, MovieDbContract.MovieEntry.COLUMN_RAGE + " DESC");
 
         return cursor;

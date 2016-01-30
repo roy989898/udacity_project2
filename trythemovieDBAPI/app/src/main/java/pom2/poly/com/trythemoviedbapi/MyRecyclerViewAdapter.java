@@ -29,6 +29,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return mcursor;
     }
     public void swapCursor(Cursor d){
+
         this.mcursor=d;
         notifyDataSetChanged();
     }
