@@ -1,12 +1,9 @@
 package pom2.poly.com.trythemoviedbapi;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
@@ -22,7 +19,6 @@ import android.view.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,10 +70,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Toast.makeText(this, perf_sort_op, Toast.LENGTH_SHORT).show();
 
         //get the old setting
-        SharedPreferences old_sharedPref = getPreferences(Context.MODE_PRIVATE);
+
+        SharedPreferences old_sharedPref = getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
         old_perf_sort_op = old_sharedPref.getString(getResources().getString(R.string.old_pref_sort__key), "pop");
 
-        if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE)||!perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
+        if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE) || !perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
             updateMovie();
         }
 
@@ -136,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //when load finish set the Cursor
 
 
-        //TODO click iteam
         //gridView.setOnItemClickListener(this);
 
 
@@ -153,12 +149,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void updateMovie() {
-        GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask();
+        GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(this, old_perf_sort_op, perf_sort_pop_top_fav);
         task.execute();
     }
 
     //this method use the data from getConfigData and getMovieDatav2 ,to get the MOVIE object array
-    private Movie[] getMOvieObject() {
+    /*private Movie[] getMOvieObject() {
 
         Config configr = getConfigData();
         if(!perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE)){
@@ -167,14 +163,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return MovieFactory.startMakeMovieArray(configr, result1);
         }else{
             //select Favourite in the setting
-            //TODO
+
             MovieIdResult[] mra=getMviedResult();
             return MovieFactory.startMakeMovieArrayfromMovideResult(configr, mra);
         }
 
 
 
-    }
+    }*/
     private Results getMovieDatav2(String topOrPop) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.themoviedb.org")
@@ -209,21 +205,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private MovieIdResult[] getMviedResult() {
         //step1:get the favourited m_id
-        ArrayList<MovieIdResult> mrArraylist=new ArrayList<>();
-        Cursor m_idCursor=getContentResolver().query(MovieDbContract.FavouriteEntry.CONTENT_URI, null, null, null, null);
+        ArrayList<MovieIdResult> mrArraylist = new ArrayList<>();
+        Cursor m_idCursor = getContentResolver().query(MovieDbContract.FavouriteEntry.CONTENT_URI, null, null, null, null);
         //step2:use the favouriteed m_id to get the MovieIdResult
-        if(m_idCursor==null){
+        if (m_idCursor == null) {
             return null;
-        }else{
+        } else {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://api.themoviedb.org")
                     .addConverterFactory(GsonConverterFactory.create()).build();
 
             APIService service = retrofit.create(APIService.class);
             m_idCursor.moveToPosition(-1);
-           while (m_idCursor.moveToNext()){
-                int c_index=m_idCursor.getColumnIndex(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY);
-                String m_id=m_idCursor.getString(c_index);
+            while (m_idCursor.moveToNext()) {
+                int c_index = m_idCursor.getColumnIndex(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY);
+                String m_id = m_idCursor.getString(c_index);
                 Call<MovieIdResult> callMovieResult = service.LoadSingleFavouriteMovie(m_id);
                 try {
                     Response<MovieIdResult> responseMovieResult = callMovieResult.execute();
@@ -234,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     continue;
                 }
             }
-            MovieIdResult[] mrArray=new MovieIdResult[mrArraylist.size()];
+            MovieIdResult[] mrArray = new MovieIdResult[mrArraylist.size()];
             return mrArraylist.toArray(mrArray);
         }
 
@@ -281,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
 
-    private Uri insertIntoContntProvider(Movie movie) {
+    /*private Uri insertIntoContntProvider(Movie movie) {
         ContentValues cv = new ContentValues();
         cv.put(MovieDbContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
         cv.put(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPoster_path());
@@ -296,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         cv.put(MovieDbContract.MovieEntry.COLUMN_BASE_URL, "");
         Uri uri = getContentResolver().insert(MovieDbContract.MovieEntry.CONTENT_URI, cv);
         return uri;
-    }
+    }*/
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -380,10 +376,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bundle.putString(Utility.BUNDLE_KEY_OVERVIEW, overview);
         bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
         bundle.putString(Utility.BUNDLE_KEY_M_ID, m_id);
+        getContentResolver();
         return bundle;
     }
 
-    class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
+    /*class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
         @Override
         protected Movie[] doInBackground(Void... voids) {
             //delete the old record first,in the moviw table
@@ -403,13 +400,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         @Override
         protected void onPostExecute(Movie[] movieArray) {
             super.onPostExecute(movieArray);
-            //Todo delete the Array adapter
-            /*if (movieArray != null) {
+            *//*if (movieArray != null) {
                 Log.i("GdataFromMOVIEDBtask", "in onPostExecute");
                 movieArrayList.clear();
                 movieArrayList.addAll(Arrays.asList(movieArray));
                 //myArrayAdapter.notifyDataSetChanged();
-            }*/
+            }*//*
             //for test the ContentProvider only
             //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
 
@@ -437,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             super.onPreExecute();
 
         }
-    }
+    }*/
 
 
 }

@@ -15,4 +15,5 @@ public class Utility {
     static final String BUNDLE_KEY_OVERVIEW = "bundleoverview";
     static final String BUNDLE_KEY_BACKGROUNDPATH = "bundlebackgroundpath";
     static final String IMAGE_BUTTON_KEY = "imbk";
+    static final String SHAREDPREFERENCE_KEY = "spk";
 }
