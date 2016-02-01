@@ -24,7 +24,7 @@ import retrofit2.Retrofit;
 /**
  * Created by User on 30/1/2016.
  */
-class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
+public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
     private String perf_sort_pop_top_fav;
     private String old_perf_sort_op;
     private Context mContext = null;

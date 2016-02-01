@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -16,34 +18,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import java.io.IOException;
-import java.util.ArrayList;
+import android.widget.FrameLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pom2.poly.com.trythemoviedbapi.MovieAPI.APIService;
-import pom2.poly.com.trythemoviedbapi.MovieAPI.Config;
-import pom2.poly.com.trythemoviedbapi.MovieAPI.MovieIDResult.MovieIdResult;
-import pom2.poly.com.trythemoviedbapi.MovieAPI.Results;
+import pom2.poly.com.trythemoviedbapi.Fragment.MainFragment;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
-import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbHelper;
-import retrofit2.Call;
-import retrofit2.GsonConverterFactory;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyRecyclerViewAdapter.MyClickListener {
     private static int MOVIE_POP_LOADER = 0;
     private static int MOVIE_TOP_LOADER = 1;
     private static int MOVIE_FAV_LOADER = 2;
-    final String IMAGE = "images";
-    final String BASE_URL = "base_url";
-    final String POSTER_Z = "poster_sizes";
-    final String MOVIE_KEY = "getTHeMovie";
-    @Bind(R.id.my_recycler_view)
-    RecyclerView myRecyclerView;
+
+    @Bind(R.id.frame_layout_main)
+    FrameLayout frameLayoutMain;
 
     private String perf_sort_pop_top_fav;
     private String old_perf_sort_op;
@@ -61,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
         //get the new setting
@@ -78,9 +67,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             updateMovie();
         }
 
-    }
+    }*/
 
-    @Override
+   /* @Override
     protected void onResume() {
         super.onResume();
         switch (perf_sort_pop_top_fav) {
@@ -99,16 +88,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         }
 
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        //try SQL
-        MovieDbHelper movieDbHelper = new MovieDbHelper(this);
-        movieDbHelper.getWritableDatabase();
+
+        FragmentManager fragementManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragementManager.beginTransaction();
+        MainFragment mainFragment=new MainFragment();
+        fragmentTransaction.add(R.id.frame_layout_main,mainFragment);
+        fragmentTransaction.commit();
+
+
         //S
 
 
@@ -127,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //se the layout manager,defune the way to show the View iteam
 //        mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        myRecyclerView.setLayoutManager(mLayoutManager);
+//        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+//        myRecyclerView.setLayoutManager(mLayoutManager);
 
         //when load finish set the Cursor
 
@@ -171,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     }*/
-    private Results getMovieDatav2(String topOrPop) {
+   /* private Results getMovieDatav2(String topOrPop) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.themoviedb.org")
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -201,9 +195,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else {
             return null;
         }
-    }
+    }*/
 
-    private MovieIdResult[] getMviedResult() {
+    /*private MovieIdResult[] getMviedResult() {
         //step1:get the favourited m_id
         ArrayList<MovieIdResult> mrArraylist = new ArrayList<>();
         Cursor m_idCursor = getContentResolver().query(MovieDbContract.FavouriteEntry.CONTENT_URI, null, null, null, null);
@@ -234,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return mrArraylist.toArray(mrArray);
         }
 
-    }
+    }*/
 
 
     @Override
@@ -253,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
-    private Config getConfigData() {
+    /*private Config getConfigData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.themoviedb.org")
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -273,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return null;
         }
 
-    }
+    }*/
 
 
 
@@ -331,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (myrecycleViewadapter == null) {
             myrecycleViewadapter = new MyRecyclerViewAdapter(data, this);
-            myRecyclerView.setAdapter(myrecycleViewadapter);
+//            myRecyclerView.setAdapter(myrecycleViewadapter);
             myrecycleViewadapter.setOnItemClickListener(this);
         } else {
             myrecycleViewadapter.swapCursor(data);
@@ -376,7 +370,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bundle.putString(Utility.BUNDLE_KEY_OVERVIEW, overview);
         bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
         bundle.putString(Utility.BUNDLE_KEY_M_ID, m_id);
-        getContentResolver();
         return bundle;
     }
 
