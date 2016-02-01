@@ -1,18 +1,11 @@
 package pom2.poly.com.trythemoviedbapi;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
@@ -22,11 +15,12 @@ import android.widget.FrameLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pom2.poly.com.trythemoviedbapi.Fragment.DetailFragment;
 import pom2.poly.com.trythemoviedbapi.Fragment.MainFragment;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyRecyclerViewAdapter.MyClickListener {
+public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
     private static int MOVIE_POP_LOADER = 0;
     private static int MOVIE_TOP_LOADER = 1;
     private static int MOVIE_FAV_LOADER = 2;
@@ -98,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         FragmentManager fragementManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragementManager.beginTransaction();
-        MainFragment mainFragment=new MainFragment();
-        fragmentTransaction.add(R.id.frame_layout_main,mainFragment);
+        MainFragment mainFragment = new MainFragment();
+        fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
         fragmentTransaction.commit();
 
 
@@ -247,6 +241,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
+    @Override
+    public void onItemClick(int position, View v,Cursor c) {
+        /*FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        DetailFragment aNewDetailFragment=new DetailFragment();
+        aNewDetailFragment.setArguments(putCursordatainToBundle(c));
+        fragmentTransaction.replace(R.id.frame_layout_main,aNewDetailFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();*/
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtras(putCursordatainToBundle(c));
+
+        startActivity(intent);
+
+    }
+
+    private Bundle putCursordatainToBundle(Cursor c) {
+        String title = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE));
+        String poster_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH));
+        String rate = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE));
+        String date = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_R_DATE));
+        String overview = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_OVERVIEW));
+        String background_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH));
+        String m_id = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID));
+
+        Bundle bundle = new Bundle();
+
+        bundle.putString(Utility.BUNDLE_KEY_TITLE, title);
+        bundle.putString(Utility.BUNDLE_KEY_POSTERPATH, poster_path);
+        bundle.putString(Utility.BUNDLE_KEY_RATE, rate);
+        bundle.putString(Utility.BUNDLE_KEY_DATE, date);
+        bundle.putString(Utility.BUNDLE_KEY_OVERVIEW, overview);
+        bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
+        bundle.putString(Utility.BUNDLE_KEY_M_ID, m_id);
+        return bundle;
+    }
+
     /*private Config getConfigData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.themoviedb.org")
@@ -288,90 +319,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return uri;
     }*/
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        Loader<Cursor> cursorLoader = null;
-        if (perf_sort_pop_top_fav == null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            perf_sort_pop_top_fav = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
-        }
-        switch (perf_sort_pop_top_fav) {
-            case Utility.TOP_MOVIE:
-                Log.i("loader", "onCreateLoader-TOP_MOVIE");
-                cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI_TOP, null, null, null, null);
-
-                break;
-            case Utility.POP_MOVIE:
-                Log.i("loader", "onCreateLoader-POP_MOVIE");
-                cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI_POP, null, null, null, null);
-
-                break;
-            case Utility.FAV_MOVIE:
-                Log.i("loader", "onCreateLoader-FAV_MOVIE");
-                cursorLoader = new CursorLoader(this, MovieDbContract.MovieEntry.CONTENT_URI, null, null, null, null);
-
-                break;
-        }
-        return cursorLoader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.i("loader", "onLoadFinished");
-//        myrecycleViewadapter.swapCursor(data);
-        //myCursorAdapter.notifyDataSetChanged();
-//        showCursorContent(data);
-
-        if (myrecycleViewadapter == null) {
-            myrecycleViewadapter = new MyRecyclerViewAdapter(data, this);
-//            myRecyclerView.setAdapter(myrecycleViewadapter);
-            myrecycleViewadapter.setOnItemClickListener(this);
-        } else {
-            myrecycleViewadapter.swapCursor(data);
-        }
 
 
-    }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        Log.i("loader", "onLoaderReset");
-//        myrecycleViewadapter.swapCursor(null);
-    }
 
-    @Override
-    public void onItemClick(int position, View v) {
-//        Toast.makeText(this, position + "", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, DetailActivity.class);
-        Cursor cursor = myrecycleViewadapter.getCursor();
-        cursor.moveToPosition(position);
 
-        intent.putExtras(putCursordatainToBundle(cursor));
 
-        startActivity(intent);
-    }
 
-    private Bundle putCursordatainToBundle(Cursor c) {
-        String title = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE));
-        String poster_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH));
-        String rate = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE));
-        String date = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_R_DATE));
-        String overview = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_OVERVIEW));
-        String background_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH));
-        String m_id = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID));
 
-        Bundle bundle = new Bundle();
 
-        bundle.putString(Utility.BUNDLE_KEY_TITLE, title);
-        bundle.putString(Utility.BUNDLE_KEY_POSTERPATH, poster_path);
-        bundle.putString(Utility.BUNDLE_KEY_RATE, rate);
-        bundle.putString(Utility.BUNDLE_KEY_DATE, date);
-        bundle.putString(Utility.BUNDLE_KEY_OVERVIEW, overview);
-        bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
-        bundle.putString(Utility.BUNDLE_KEY_M_ID, m_id);
-        return bundle;
-    }
 
     /*class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
         @Override

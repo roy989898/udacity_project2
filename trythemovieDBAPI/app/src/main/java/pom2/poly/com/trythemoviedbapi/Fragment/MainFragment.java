@@ -1,5 +1,6 @@
 package pom2.poly.com.trythemoviedbapi.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +43,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private String perf_sort_pop_top_fav;
     private String old_perf_sort_op;
 
+    private Callback mActivity;
+
     @Override
     public void onPause() {
         super.onPause();
@@ -50,6 +53,12 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private void updateMovie() {
         GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(getContext(), old_perf_sort_op, perf_sort_pop_top_fav);
         task.execute();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity=(Callback)activity;
     }
 
     @Override
@@ -167,32 +176,16 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onItemClick(int position, View v) {
         //        Toast.makeText(this, position + "", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
+//
         Cursor cursor = myrecycleViewadapter.getCursor();
         cursor.moveToPosition(position);
 
-        intent.putExtras(putCursordatainToBundle(cursor));
 
-        startActivity(intent);
+
+        mActivity.onItemClick(position, v,  cursor);
     }
-    private Bundle putCursordatainToBundle(Cursor c) {
-        String title = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE));
-        String poster_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH));
-        String rate = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE));
-        String date = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_R_DATE));
-        String overview = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_OVERVIEW));
-        String background_path = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH));
-        String m_id = c.getString(c.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_M_ID));
-
-        Bundle bundle = new Bundle();
-
-        bundle.putString(Utility.BUNDLE_KEY_TITLE, title);
-        bundle.putString(Utility.BUNDLE_KEY_POSTERPATH, poster_path);
-        bundle.putString(Utility.BUNDLE_KEY_RATE, rate);
-        bundle.putString(Utility.BUNDLE_KEY_DATE, date);
-        bundle.putString(Utility.BUNDLE_KEY_OVERVIEW, overview);
-        bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
-        bundle.putString(Utility.BUNDLE_KEY_M_ID, m_id);
-        return bundle;
+    public interface Callback{
+        void onItemClick(int position, View v,Cursor c);
     }
+
 }
