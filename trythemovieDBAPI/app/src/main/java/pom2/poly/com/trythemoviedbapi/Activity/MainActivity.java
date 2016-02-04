@@ -1,4 +1,4 @@
-package pom2.poly.com.trythemoviedbapi;
+package pom2.poly.com.trythemoviedbapi.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,9 +15,12 @@ import android.widget.FrameLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pom2.poly.com.trythemoviedbapi.Fragment.DetailFragment;
 import pom2.poly.com.trythemoviedbapi.Fragment.MainFragment;
+import pom2.poly.com.trythemoviedbapi.GdataFromMOVIEDBtask;
+import pom2.poly.com.trythemoviedbapi.MyRecyclerViewAdapter;
+import pom2.poly.com.trythemoviedbapi.R;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
+import pom2.poly.com.trythemoviedbapi.Utility;
 
 
 public class MainActivity extends AppCompatActivity implements MainFragment.Callback {

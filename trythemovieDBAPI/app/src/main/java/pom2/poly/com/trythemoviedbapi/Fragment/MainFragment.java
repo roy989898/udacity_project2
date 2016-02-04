@@ -2,7 +2,6 @@ package pom2.poly.com.trythemoviedbapi.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.view.ViewGroup;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pom2.poly.com.trythemoviedbapi.DetailActivity;
 import pom2.poly.com.trythemoviedbapi.GdataFromMOVIEDBtask;
 import pom2.poly.com.trythemoviedbapi.MyRecyclerViewAdapter;
 import pom2.poly.com.trythemoviedbapi.R;
@@ -58,7 +56,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity=(Callback)activity;
+        mActivity = (Callback) activity;
     }
 
     @Override
@@ -108,7 +106,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container,false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         ButterKnife.bind(this, view);
 
@@ -181,11 +179,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         cursor.moveToPosition(position);
 
 
-
-        mActivity.onItemClick(position, v,  cursor);
+        mActivity.onItemClick(position, v, cursor);
     }
-    public interface Callback{
-        void onItemClick(int position, View v,Cursor c);
+
+    public interface Callback {
+        void onItemClick(int position, View v, Cursor c);
     }
 
 }

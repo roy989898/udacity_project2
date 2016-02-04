@@ -19,13 +19,13 @@
             android:parentActivityName=".MainActivity"
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pom2.poly.com.trythemoviedbapi.MainActivity" />
+                android:value="pom2.poly.com.trythemoviedbapi.Activity.MainActivity" />
         </activity>
         <activity android:name=".SettingActivity">
             android:parentActivityName=".MainActivity"
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pom2.poly.com.trythemoviedbapi.MainActivity" />
+                android:value="pom2.poly.com.trythemoviedbapi.Activity.MainActivity" />
         </activity>
 
     </application>

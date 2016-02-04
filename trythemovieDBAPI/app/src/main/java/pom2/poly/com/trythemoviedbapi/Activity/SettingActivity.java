@@ -1,10 +1,12 @@
-package pom2.poly.com.trythemoviedbapi;
+package pom2.poly.com.trythemoviedbapi.Activity;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+
+import pom2.poly.com.trythemoviedbapi.R;
 
 public class SettingActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
 

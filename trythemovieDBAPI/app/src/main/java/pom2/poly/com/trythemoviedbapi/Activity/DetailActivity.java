@@ -1,4 +1,4 @@
-package pom2.poly.com.trythemoviedbapi;
+package pom2.poly.com.trythemoviedbapi.Activity;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -25,6 +25,7 @@ import com.squareup.picasso.Target;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.Fragment.DetailFragment;
+import pom2.poly.com.trythemoviedbapi.R;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 
 public class DetailActivity extends AppCompatActivity  {
