@@ -34,6 +34,7 @@ import pom2.poly.com.trythemoviedbapi.Utility;
  * Created by User on 1/2/2016.
  */
 public class DetailFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+    private static int CURSORLOADER_ID;
     @Bind(R.id.imb1)
     ImageButton imb1;
     @Bind(R.id.iv1)
@@ -51,7 +52,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     @Bind(R.id.lineayout1)
     LinearLayout lineayout1;
     private String m_id = null;
-    private static int CURSORLOADER_ID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

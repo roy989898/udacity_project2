@@ -24,19 +24,13 @@ import pom2.poly.com.trythemoviedbapi.Utility;
 
 
 public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
-    private static int MOVIE_POP_LOADER = 0;
-    private static int MOVIE_TOP_LOADER = 1;
-    private static int MOVIE_FAV_LOADER = 2;
 
-    @Bind(R.id.frame_layout_main)
-    FrameLayout frameLayoutMain;
+    private static Boolean isTwoPlanMode = false;
 
-    private String perf_sort_pop_top_fav;
-    private String old_perf_sort_op;
+
+
 //    private ArrayList<Movie> movieArrayList;
 
-    private MyRecyclerViewAdapter myrecycleViewadapter;
-    private StaggeredGridLayoutManager mLayoutManager;
 
     public static void showCursorContent(Cursor data) {
         Log.i("showCursorContent", "in");
@@ -95,9 +89,25 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
         FragmentManager fragementManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragementManager.beginTransaction();
-        MainFragment mainFragment = new MainFragment();
-        fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
-        fragmentTransaction.commit();
+
+        //use can find the frame_layout_detail_in_main layout yo define is the phone is loarge and landscape
+        if (findViewById(R.id.frame_layout_detail_in_main) == null)
+            isTwoPlanMode = false;
+        else
+            isTwoPlanMode = true;
+
+        if (savedInstanceState == null) {
+
+            if (isTwoPlanMode) {
+
+            } else {
+                MainFragment mainFragment = new MainFragment();
+                mainFragment.setIsTwoPlanMode(false);
+                fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
+                fragmentTransaction.commit();
+            }
+
+        }
 
 
         //S
@@ -139,10 +149,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 //        outState.putParcelableArrayList(MOVIE_KEY, movieArrayList);
     }
 
-    private void updateMovie() {
-        GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(this, old_perf_sort_op, perf_sort_pop_top_fav);
-        task.execute();
-    }
+
 
     //this method use the data from getConfigData and getMovieDatav2 ,to get the MOVIE object array
     /*private Movie[] getMOvieObject() {
@@ -245,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     }
 
     @Override
-    public void onItemClick(int position, View v,Cursor c) {
+    public void onItemClick(int position, View v, Cursor c) {
         /*FragmentManager fragmentManager=getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         DetailFragment aNewDetailFragment=new DetailFragment();
@@ -253,10 +260,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         fragmentTransaction.replace(R.id.frame_layout_main,aNewDetailFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();*/
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtras(putCursordatainToBundle(c));
+        if (isTwoPlanMode) {
 
-        startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtras(putCursordatainToBundle(c));
+
+            startActivity(intent);
+        }
+
 
     }
 

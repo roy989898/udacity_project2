@@ -40,6 +40,16 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private StaggeredGridLayoutManager mLayoutManager;
     private String perf_sort_pop_top_fav;
     private String old_perf_sort_op;
+    private Boolean isTwoPlanMode;
+
+    public Boolean getIsTwoPlanMode() {
+        return isTwoPlanMode;
+    }
+
+    public MainFragment setIsTwoPlanMode(Boolean isTwoPlanMode) {
+        this.isTwoPlanMode = isTwoPlanMode;
+        return this;
+    }
 
     private Callback mActivity;
 
