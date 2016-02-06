@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,9 +14,8 @@ import android.widget.FrameLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pom2.poly.com.trythemoviedbapi.Fragment.DetailFragment;
 import pom2.poly.com.trythemoviedbapi.Fragment.MainFragment;
-import pom2.poly.com.trythemoviedbapi.GdataFromMOVIEDBtask;
-import pom2.poly.com.trythemoviedbapi.MyRecyclerViewAdapter;
 import pom2.poly.com.trythemoviedbapi.R;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 import pom2.poly.com.trythemoviedbapi.Utility;
@@ -27,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
     private static Boolean isTwoPlanMode = false;
 
+    FrameLayout frameLayoutDetailMain;
 
 
 //    private ArrayList<Movie> movieArrayList;
@@ -91,20 +90,24 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         FragmentTransaction fragmentTransaction = fragementManager.beginTransaction();
 
         //use can find the frame_layout_detail_in_main layout yo define is the phone is loarge and landscape
-        if (findViewById(R.id.frame_layout_detail_in_main) == null)
+        frameLayoutDetailMain= (FrameLayout) findViewById(R.id.frame_layout_detail_in_main);
+        if (frameLayoutDetailMain == null)
             isTwoPlanMode = false;
         else
             isTwoPlanMode = true;
 
         if (savedInstanceState == null) {
-
+            MainFragment mainFragment = new MainFragment();
+            mainFragment.setIsTwoPlanMode(false);
+            fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
+            fragmentTransaction.commit();
             if (isTwoPlanMode) {
 
             } else {
-                MainFragment mainFragment = new MainFragment();
+                /*MainFragment mainFragment = new MainFragment();
                 mainFragment.setIsTwoPlanMode(false);
                 fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
-                fragmentTransaction.commit();
+                fragmentTransaction.commit();*/
             }
 
         }
@@ -148,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         super.onSaveInstanceState(outState);
 //        outState.putParcelableArrayList(MOVIE_KEY, movieArrayList);
     }
-
 
 
     //this method use the data from getConfigData and getMovieDatav2 ,to get the MOVIE object array
@@ -261,6 +263,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();*/
         if (isTwoPlanMode) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransavtion = fragmentManager.beginTransaction();
+
+            DetailFragment df=new DetailFragment();
+            df.setArguments(putCursordatainToBundle(c));
+            df.setIsTwoPlanMode(true);
+            fragmentTransavtion.replace(R.id.frame_layout_detail_in_main,df);
+            fragmentTransavtion.commit();
+
 
         } else {
             Intent intent = new Intent(this, DetailActivity.class);

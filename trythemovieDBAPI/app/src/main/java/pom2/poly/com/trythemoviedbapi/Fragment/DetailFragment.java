@@ -52,10 +52,32 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     @Bind(R.id.lineayout1)
     LinearLayout lineayout1;
     private String m_id = null;
+    private Boolean isTwoPlanMode = false;
+    private Bundle infBundle = null;
+
+    public Boolean getIsTwoPlanMode() {
+        return isTwoPlanMode;
+    }
+
+    public DetailFragment setIsTwoPlanMode(Boolean isTwoPlanMode) {
+        this.isTwoPlanMode = isTwoPlanMode;
+        return this;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //if do not save before ,infBundle will equal null
+        if (savedInstanceState != null) {
+            infBundle = (Bundle) savedInstanceState.get(Utility.BUNDLE_KEY_RESTORE_DETAIL_BUNDLE);
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Utility.BUNDLE_KEY_RESTORE_DETAIL_BUNDLE, infBundle);
     }
 
     @Nullable
@@ -66,7 +88,17 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         //        Movie aMovie = getIntent().getParcelableExtra(DetailActivity.class.getName());
         //TODO: use the right  method get the bundle
-        Bundle infBundle = getActivity().getIntent().getExtras();
+
+        //if can't get infBundle from savedInstanceState
+        if (infBundle == null) {
+            if (isTwoPlanMode) {
+                infBundle = getArguments();
+            } else {
+                infBundle = getActivity().getIntent().getExtras();
+            }
+
+        }
+
         tvTitle.setText(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
 
         Target target = new Target() {
