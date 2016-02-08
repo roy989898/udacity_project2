@@ -98,17 +98,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
         if (savedInstanceState == null) {
             MainFragment mainFragment = new MainFragment();
-            mainFragment.setIsTwoPlanMode(false);
+            mainFragment.setIsTwoPlanMode(isTwoPlanMode);
             fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
             fragmentTransaction.commit();
-            if (isTwoPlanMode) {
 
-            } else {
-                /*MainFragment mainFragment = new MainFragment();
-                mainFragment.setIsTwoPlanMode(false);
-                fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
-                fragmentTransaction.commit();*/
-            }
 
         }
 

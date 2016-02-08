@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ import pom2.poly.com.trythemoviedbapi.Utility;
  */
 public class DetailFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static int CURSORLOADER_ID;
-    @Bind(R.id.imb1)
+//    @Bind(R.id.imb1)
     ImageButton imb1;
     @Bind(R.id.iv1)
     ImageView iv1;
@@ -47,7 +48,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     TextView tvDate;
     @Bind(R.id.tvOverview)
     TextView tvOverview;
-    @Bind(R.id.scrollView)
+//    @Bind(R.id.scrollView)
     ScrollView scrollView;
     @Bind(R.id.lineayout1)
     LinearLayout lineayout1;
@@ -84,10 +85,12 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
+        Log.i("DetailFragment","onCreateView");
         ButterKnife.bind(this, view);
+        imb1= (ImageButton) view.findViewById(R.id.imb1);
 
         //        Movie aMovie = getIntent().getParcelableExtra(DetailActivity.class.getName());
-        //TODO: use the right  method get the bundle
+
 
         //if can't get infBundle from savedInstanceState
         if (infBundle == null) {
@@ -165,7 +168,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
             imb1.setImageResource(R.drawable.ic_star_black_36dp);
             imb1.setTag("(R.drawable.ic_star_black_36dp");
         }
-        //TODO delete the cursor
+
 //        data.close();
 
     }
