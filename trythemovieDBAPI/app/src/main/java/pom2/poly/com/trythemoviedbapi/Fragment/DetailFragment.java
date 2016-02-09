@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -36,7 +36,9 @@ import pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.ReviewResult;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.TrailerResult.Result;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.TrailerResult.TrailerResult;
 import pom2.poly.com.trythemoviedbapi.R;
+import pom2.poly.com.trythemoviedbapi.ReviewAdapter;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
+import pom2.poly.com.trythemoviedbapi.TrailerAdapter;
 import pom2.poly.com.trythemoviedbapi.Utility;
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
@@ -48,7 +50,7 @@ import retrofit2.Retrofit;
  */
 public class DetailFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static int CURSORLOADER_ID;
-    //    @Bind(R.id.imb1)
+    //    @Bind(R.id.imb1)//use findview by ID
     ImageButton imb1;
     @Bind(R.id.iv1)
     ImageView iv1;
@@ -60,10 +62,13 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     TextView tvDate;
     @Bind(R.id.tvOverview)
     TextView tvOverview;
-    //    @Bind(R.id.scrollView)
-    ScrollView scrollView;
     @Bind(R.id.lineayout1)
     LinearLayout lineayout1;
+    @Bind(R.id.lvShowReview)
+    ListView lvShowReview;
+//    @Bind(R.id.lvTrailer)
+    ListView lvTrailer;
+
     private String m_id = null;
     private Boolean isTwoPlanMode = false;
     private Bundle infBundle = null;
@@ -148,7 +153,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
 
         //Load trailer with the m_id
-        new getTrailerTask().execute(m_id);
+//        new getTrailerTask().execute(m_id);
 
         //Load review with the m_id
         new getReviewTask().execute(m_id);
@@ -255,9 +260,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         @Override
         protected void onPostExecute(List<Result> result) {
-            List<Result> Aresult = result;
-            //TODO:to show the trailer
             super.onPostExecute(result);
+            List<Result> Aresult = result;
+            TrailerAdapter ta=new TrailerAdapter(getContext(),result);
+            lvTrailer.setAdapter(ta);
         }
     }
 
@@ -266,7 +272,9 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         protected void onPostExecute(List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result> reviewResult) {
             super.onPostExecute(reviewResult);
             List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result> a = reviewResult;
-            //TODO:show the review
+            ReviewAdapter ra = new ReviewAdapter(getContext(), a);
+            lvShowReview.setAdapter(ra);
+
         }
 
         @Override

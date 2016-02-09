@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="mainactivity_background">#f4f1f1</color>
+    <color name="review_textColor">#0e0e0e</color>
 </resources>
