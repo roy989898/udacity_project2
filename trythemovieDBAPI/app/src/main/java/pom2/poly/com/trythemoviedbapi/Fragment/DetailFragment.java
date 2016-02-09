@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,11 +26,21 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.IOException;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pom2.poly.com.trythemoviedbapi.MovieAPI.APIService;
+import pom2.poly.com.trythemoviedbapi.MovieAPI.TrailerResult.Result;
+import pom2.poly.com.trythemoviedbapi.MovieAPI.TrailerResult.TrailerResult;
 import pom2.poly.com.trythemoviedbapi.R;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 import pom2.poly.com.trythemoviedbapi.Utility;
+import retrofit2.Call;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by User on 1/2/2016.
@@ -135,6 +146,9 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
 
+        //Load trailer with the m_id
+
+        new getTrailerTask().execute(m_id);
 
         return view;
     }
@@ -207,4 +221,40 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         }
 
     }
+
+    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> {
+
+        @Override
+        protected List<Result> doInBackground(String... params) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.themoviedb.org")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            APIService service = retrofit.create(APIService.class);
+            Call<TrailerResult> callTrailerResult = service.LoadTrailer(params[0]);
+            Response<TrailerResult> responseTrailerResult=null;
+            try {
+                responseTrailerResult = callTrailerResult.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            TrailerResult trailerResult=null;
+            if(responseTrailerResult!=null){
+                trailerResult = responseTrailerResult.body();
+            }else{
+                //if the trailerResult is null.return null
+                return null;
+            }
+            return trailerResult.getResults();
+        }
+
+        @Override
+        protected void onPostExecute(List<Result> result) {
+            List<Result> Aresult = result;
+            //TODO:to show the trailer
+            super.onPostExecute(result);
+        }
+    }
 }
+
+

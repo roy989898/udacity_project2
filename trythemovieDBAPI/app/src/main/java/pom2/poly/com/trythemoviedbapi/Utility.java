@@ -17,4 +17,5 @@ public class Utility {
     public static final String IMAGE_BUTTON_KEY = "imbk";
     public static final String SHAREDPREFERENCE_KEY = "spk";
     public static final String BUNDLE_KEY_RESTORE_DETAIL_BUNDLE = "detailbundle_key";
+    public static final String MOVIE_API_KEY = "db9db09d5d4c08b057a2aefbeea458b0";
 }
