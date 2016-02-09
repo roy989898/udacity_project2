@@ -1,6 +1,8 @@
 package pom2.poly.com.trythemoviedbapi.Fragment;
 
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,12 +69,13 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     LinearLayout lineayout1;
     @Bind(R.id.lvShowReview)
     ListView lvShowReview;
-//    @Bind(R.id.lvTrailer)
+    @Bind(R.id.lvTrailer)
     ListView lvTrailer;
 
     private String m_id = null;
     private Boolean isTwoPlanMode = false;
     private Bundle infBundle = null;
+
 
     public Boolean getIsTwoPlanMode() {
         return isTwoPlanMode;
@@ -91,6 +95,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         }
 
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -153,7 +158,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
 
         //Load trailer with the m_id
-//        new getTrailerTask().execute(m_id);
+        new getTrailerTask().execute(m_id);
 
         //Load review with the m_id
         new getReviewTask().execute(m_id);
@@ -230,7 +235,9 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
     }
 
-    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> {
+
+
+    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> implements AdapterView.OnItemClickListener {
 
         @Override
         protected List<Result> doInBackground(String... params) {
@@ -262,9 +269,34 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         protected void onPostExecute(List<Result> result) {
             super.onPostExecute(result);
             List<Result> Aresult = result;
-            TrailerAdapter ta=new TrailerAdapter(getContext(),result);
+            TrailerAdapter ta = new TrailerAdapter(getContext(), result);
             lvTrailer.setAdapter(ta);
+            lvTrailer.setOnItemClickListener(this);
         }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            Result trailer = (Result)parent.getItemAtPosition(position);
+            watchYoutubeVideo(trailer.getKey());
+
+        }
+    }
+
+    public void watchYoutubeVideo(String key) {
+        /*try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+
+            startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + id));
+            startActivity(intent);
+        }*/
+
+        Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + key));
+        startActivity(intent);
     }
 
     private class getReviewTask extends AsyncTask<String, Void, List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result>> {

@@ -21,7 +21,7 @@ public class TrailerAdapter extends ArrayAdapter<Result> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.showtrailerlayout, parent, false);
-            convertView.setTag(new ReviewAdapter.ViewHolder(convertView));
+            convertView.setTag(new ViewHolder(convertView));
         }
         ViewHolder vh= (ViewHolder) convertView.getTag();
         vh.tvTrailer.setText(getItem(position).getName());
