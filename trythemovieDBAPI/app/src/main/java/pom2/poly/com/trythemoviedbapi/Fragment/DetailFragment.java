@@ -32,6 +32,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.APIService;
+import pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.ReviewResult;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.TrailerResult.Result;
 import pom2.poly.com.trythemoviedbapi.MovieAPI.TrailerResult.TrailerResult;
 import pom2.poly.com.trythemoviedbapi.R;
@@ -47,7 +48,7 @@ import retrofit2.Retrofit;
  */
 public class DetailFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static int CURSORLOADER_ID;
-//    @Bind(R.id.imb1)
+    //    @Bind(R.id.imb1)
     ImageButton imb1;
     @Bind(R.id.iv1)
     ImageView iv1;
@@ -59,7 +60,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     TextView tvDate;
     @Bind(R.id.tvOverview)
     TextView tvOverview;
-//    @Bind(R.id.scrollView)
+    //    @Bind(R.id.scrollView)
     ScrollView scrollView;
     @Bind(R.id.lineayout1)
     LinearLayout lineayout1;
@@ -96,9 +97,9 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        Log.i("DetailFragment","onCreateView");
+        Log.i("DetailFragment", "onCreateView");
         ButterKnife.bind(this, view);
-        imb1= (ImageButton) view.findViewById(R.id.imb1);
+        imb1 = (ImageButton) view.findViewById(R.id.imb1);
 
         //        Movie aMovie = getIntent().getParcelableExtra(DetailActivity.class.getName());
 
@@ -147,8 +148,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
 
         //Load trailer with the m_id
-
         new getTrailerTask().execute(m_id);
+
+        //Load review with the m_id
+        new getReviewTask().execute(m_id);
 
         return view;
     }
@@ -232,16 +235,18 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
                     .build();
             APIService service = retrofit.create(APIService.class);
             Call<TrailerResult> callTrailerResult = service.LoadTrailer(params[0]);
-            Response<TrailerResult> responseTrailerResult=null;
+            Response<TrailerResult> responseTrailerResult = null;
             try {
                 responseTrailerResult = callTrailerResult.execute();
             } catch (IOException e) {
                 e.printStackTrace();
+                //if the trailerResult is null.return null
+                return null;
             }
-            TrailerResult trailerResult=null;
-            if(responseTrailerResult!=null){
+            TrailerResult trailerResult = null;
+            if (responseTrailerResult != null) {
                 trailerResult = responseTrailerResult.body();
-            }else{
+            } else {
                 //if the trailerResult is null.return null
                 return null;
             }
@@ -255,6 +260,37 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
             super.onPostExecute(result);
         }
     }
+
+    private class getReviewTask extends AsyncTask<String, Void, List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result>> {
+        @Override
+        protected void onPostExecute(List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result> reviewResult) {
+            super.onPostExecute(reviewResult);
+            List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result> a = reviewResult;
+            //TODO:show the review
+        }
+
+        @Override
+        protected List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result> doInBackground(String... params) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.themoviedb.org")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            APIService service = retrofit.create(APIService.class);
+            Call<ReviewResult> callTrailerResult = service.LoadReview(params[0]);
+            Response<ReviewResult> ResponseTrailerResult = null;
+            try {
+                ResponseTrailerResult = callTrailerResult.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+                //if have error,return null
+                return null;
+            }
+            ReviewResult trailerResult = ResponseTrailerResult.body();
+            return trailerResult.getResults();
+        }
+    }
 }
+
+
 
 
