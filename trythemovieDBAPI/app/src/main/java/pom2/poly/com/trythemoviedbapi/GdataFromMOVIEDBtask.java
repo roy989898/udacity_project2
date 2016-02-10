@@ -121,7 +121,7 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
 
     private void testThequery(Uri uri) {
         Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
-        while (cursor.moveToNext()) {
+        while (cursor != null ? cursor.moveToNext() : false) {
             Log.i("show_cursor", cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry._ID)) + " " + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE)) + " rage: "
                     + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE)) + " popularity: " + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POP)));
         }
@@ -225,7 +225,7 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
 
         Response<Results> results = null;
         try {
-            results = callResults.execute();
+            results = callResults != null ? callResults.execute() : null;
         } catch (IOException e) {
             e.printStackTrace();
         }

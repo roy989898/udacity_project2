@@ -50,7 +50,7 @@
                 android:gravity="center_horizontal"
                 android:text="Title"
                 android:textColor="#030303"
-                android:textSize="24dp" />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/tvRate"
@@ -81,7 +81,7 @@
                 android:id="@+id/tvTrailer" />
 
             <ListView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/lvTrailer"
                 />
@@ -94,7 +94,7 @@
                 android:id="@+id/textView" />
 
             <ListView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/lvShowReview" />
 

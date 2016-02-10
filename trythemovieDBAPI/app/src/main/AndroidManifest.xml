@@ -35,7 +35,7 @@
             android:name=".Sqlite.MovieContentProvider"
             android:authorities="pom2.poly.com.trythemoviedbapi"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true"/>
     </application>
 
 </manifest>

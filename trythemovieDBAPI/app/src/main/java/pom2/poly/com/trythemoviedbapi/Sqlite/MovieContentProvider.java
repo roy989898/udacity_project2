@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 public class MovieContentProvider extends ContentProvider {
@@ -18,7 +19,6 @@ public class MovieContentProvider extends ContentProvider {
     static final int FAV = 300;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder sFAV_AND_MOVquerybuilder;
-    private  SQLiteDatabase db ;
 
     static {
         sFAV_AND_MOVquerybuilder = new SQLiteQueryBuilder();
@@ -26,6 +26,7 @@ public class MovieContentProvider extends ContentProvider {
                 MovieDbContract.FavouriteEntry.TABLE_NAME + " . " + MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY);
     }
 
+    private SQLiteDatabase db;
     private MovieDbHelper moviedbhelper;
 
     public MovieContentProvider() {
@@ -51,7 +52,7 @@ public class MovieContentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case MOVIE:
@@ -72,7 +73,7 @@ public class MovieContentProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         SQLiteDatabase db = moviedbhelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         Uri reuri = null;
@@ -132,12 +133,12 @@ public class MovieContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         moviedbhelper = new MovieDbHelper(getContext());
-        db= moviedbhelper.getReadableDatabase();
+        db = moviedbhelper.getReadableDatabase();
         return true;
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         Cursor recursor = null;
         Uri setUri = null;
@@ -195,9 +196,7 @@ public class MovieContentProvider extends ContentProvider {
     private Cursor getFav(String[] projection, String selection,
                           String[] selectionArgs) {
 
-        Cursor cursor = db.query(MovieDbContract.FavouriteEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
-
-        return cursor;
+        return db.query(MovieDbContract.FavouriteEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
     }
 
     private Cursor getMovie(String[] projection, String selection,
@@ -232,14 +231,15 @@ public class MovieContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection,
+    public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         // TODO: Implement this to handle requests to update one or more rows.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = moviedbhelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         int state = 0;
@@ -271,8 +271,8 @@ public class MovieContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        if (state != 0){}
-            getContext().getContentResolver().notifyChange(setUri, null);
+
+        getContext().getContentResolver().notifyChange(setUri, null);
 
         return state;
     }

@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Config {
 
-    public Images images;
-    public List<String> change_keys = new ArrayList<String>();
+    private Images images;
+    private List<String> change_keys = new ArrayList<String>();
 
     /**
      * @return The images

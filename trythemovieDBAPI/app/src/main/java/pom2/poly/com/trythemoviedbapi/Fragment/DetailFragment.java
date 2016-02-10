@@ -1,6 +1,5 @@
 package pom2.poly.com.trythemoviedbapi.Fragment;
 
-import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -53,7 +53,7 @@ import retrofit2.Retrofit;
  */
 public class DetailFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static int CURSORLOADER_ID;
-    //    @Bind(R.id.imb1)//use findview by ID
+//    @Bind(R.id.imb1)
     ImageButton imb1;
     @Bind(R.id.iv1)
     ImageView iv1;
@@ -65,12 +65,18 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     TextView tvDate;
     @Bind(R.id.tvOverview)
     TextView tvOverview;
-    @Bind(R.id.lineayout1)
-    LinearLayout lineayout1;
-    @Bind(R.id.lvShowReview)
-    ListView lvShowReview;
+    @Bind(R.id.tvTrailer)
+    TextView tvTrailer;
     @Bind(R.id.lvTrailer)
     ListView lvTrailer;
+    @Bind(R.id.textView)
+    TextView textView;
+    @Bind(R.id.lvShowReview)
+    ListView lvShowReview;
+
+    @Bind(R.id.lineayout1)
+    LinearLayout lineayout1;
+
 
     private String m_id = null;
     private Boolean isTwoPlanMode = false;
@@ -152,6 +158,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         tvOverview.setText(infBundle.getString(Utility.BUNDLE_KEY_OVERVIEW));
 
         m_id = infBundle.getString(Utility.BUNDLE_KEY_M_ID);
+        assert m_id != null;
         CURSORLOADER_ID = Integer.parseInt(m_id);
         imb1.setOnClickListener(this);
 
@@ -235,55 +242,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
     }
 
-
-
-    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> implements AdapterView.OnItemClickListener {
-
-        @Override
-        protected List<Result> doInBackground(String... params) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://api.themoviedb.org")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            APIService service = retrofit.create(APIService.class);
-            Call<TrailerResult> callTrailerResult = service.LoadTrailer(params[0]);
-            Response<TrailerResult> responseTrailerResult = null;
-            try {
-                responseTrailerResult = callTrailerResult.execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-                //if the trailerResult is null.return null
-                return null;
-            }
-            TrailerResult trailerResult = null;
-            if (responseTrailerResult != null) {
-                trailerResult = responseTrailerResult.body();
-            } else {
-                //if the trailerResult is null.return null
-                return null;
-            }
-            return trailerResult.getResults();
-        }
-
-        @Override
-        protected void onPostExecute(List<Result> result) {
-            super.onPostExecute(result);
-            List<Result> Aresult = result;
-            TrailerAdapter ta = new TrailerAdapter(getContext(), result);
-            lvTrailer.setAdapter(ta);
-            lvTrailer.setOnItemClickListener(this);
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            Result trailer = (Result)parent.getItemAtPosition(position);
-            watchYoutubeVideo(trailer.getKey());
-
-        }
-    }
-
-    public void watchYoutubeVideo(String key) {
+    private void watchYoutubeVideo(String key) {
         /*try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
 
@@ -299,12 +258,57 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         startActivity(intent);
     }
 
+    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> implements AdapterView.OnItemClickListener {
+
+        @Override
+        protected List<Result> doInBackground(String... params) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.themoviedb.org")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            APIService service = retrofit.create(APIService.class);
+            Call<TrailerResult> callTrailerResult = service.LoadTrailer(params[0]);
+            Response<TrailerResult> responseTrailerResult;
+            try {
+                responseTrailerResult = callTrailerResult.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+                //if the trailerResult is null.return null
+                return null;
+            }
+            TrailerResult trailerResult;
+            if (responseTrailerResult != null) {
+                trailerResult = responseTrailerResult.body();
+            } else {
+                //if the trailerResult is null.return null
+                return null;
+            }
+            return trailerResult.getResults();
+        }
+
+        @Override
+        protected void onPostExecute(List<Result> result) {
+            super.onPostExecute(result);
+            TrailerAdapter ta = new TrailerAdapter(getContext(), result);
+            lvTrailer.setAdapter(ta);
+            lvTrailer.setMinimumHeight(20);
+            lvTrailer.setOnItemClickListener(this);
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            Result trailer = (Result) parent.getItemAtPosition(position);
+            watchYoutubeVideo(trailer.getKey());
+
+        }
+    }
+
     private class getReviewTask extends AsyncTask<String, Void, List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result>> {
         @Override
         protected void onPostExecute(List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result> reviewResult) {
             super.onPostExecute(reviewResult);
-            List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result> a = reviewResult;
-            ReviewAdapter ra = new ReviewAdapter(getContext(), a);
+            ReviewAdapter ra = new ReviewAdapter(getContext(), reviewResult);
             lvShowReview.setAdapter(ra);
 
         }
@@ -317,7 +321,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
                     .build();
             APIService service = retrofit.create(APIService.class);
             Call<ReviewResult> callTrailerResult = service.LoadReview(params[0]);
-            Response<ReviewResult> ResponseTrailerResult = null;
+            Response<ReviewResult> ResponseTrailerResult;
             try {
                 ResponseTrailerResult = callTrailerResult.execute();
             } catch (IOException e) {

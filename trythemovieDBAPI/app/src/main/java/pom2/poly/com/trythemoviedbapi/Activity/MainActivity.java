@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.Fragment.DetailFragment;
 import pom2.poly.com.trythemoviedbapi.Fragment.MainFragment;
@@ -91,10 +90,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
         //use can find the frame_layout_detail_in_main layout yo define is the phone is loarge and landscape
         frameLayoutDetailMain= (FrameLayout) findViewById(R.id.frame_layout_detail_in_main);
-        if (frameLayoutDetailMain == null)
-            isTwoPlanMode = false;
-        else
-            isTwoPlanMode = true;
+        isTwoPlanMode = frameLayoutDetailMain != null;
 
         if (savedInstanceState == null) {
             MainFragment mainFragment = new MainFragment();
