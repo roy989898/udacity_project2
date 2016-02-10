@@ -1,6 +1,7 @@
 package pom2.poly.com.trythemoviedbapi.Fragment;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -81,6 +82,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     private String m_id = null;
     private Boolean isTwoPlanMode = false;
     private Bundle infBundle = null;
+    private Context mContext;
 
 
     public Boolean getIsTwoPlanMode() {
@@ -96,6 +98,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //if do not save before ,infBundle will equal null
+        mContext=getContext();
         if (savedInstanceState != null) {
             infBundle = (Bundle) savedInstanceState.get(Utility.BUNDLE_KEY_RESTORE_DETAIL_BUNDLE);
         }
@@ -289,10 +292,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         @Override
         protected void onPostExecute(List<Result> result) {
             super.onPostExecute(result);
-            TrailerAdapter ta = new TrailerAdapter(getContext(), result);
-            lvTrailer.setAdapter(ta);
-            lvTrailer.setMinimumHeight(20);
-            lvTrailer.setOnItemClickListener(this);
+            try {
+                TrailerAdapter ta = new TrailerAdapter(mContext, result);
+                lvTrailer.setAdapter(ta);
+//                lvTrailer.setMinimumHeight(20);
+                lvTrailer.setOnItemClickListener(this);
+            }catch (Exception e){
+                Log.e("onPostExecute error",e.toString());
+            }
+
         }
 
         @Override
@@ -308,8 +316,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         @Override
         protected void onPostExecute(List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result> reviewResult) {
             super.onPostExecute(reviewResult);
-            ReviewAdapter ra = new ReviewAdapter(getContext(), reviewResult);
-            lvShowReview.setAdapter(ra);
+
+
+            try {
+                ReviewAdapter ra = new ReviewAdapter(mContext, reviewResult);
+                lvShowReview.setAdapter(ra);
+            }catch (Exception e){
+                Log.e("onPostExecute error",e.toString());
+            }
 
         }
 
