@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.Fragment.DetailFragment;
 import pom2.poly.com.trythemoviedbapi.Fragment.MainFragment;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     private static Boolean isTwoPlanMode = false;
 
     FrameLayout frameLayoutDetailMain;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     public static Boolean getIsTwoPlanMode() {
         return isTwoPlanMode;
@@ -89,11 +93,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setSupportActionBar(toolbar);
+
         FragmentManager fragementManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragementManager.beginTransaction();
 
         //use can find the frame_layout_detail_in_main layout yo define is the phone is loarge and landscape
-        frameLayoutDetailMain= (FrameLayout) findViewById(R.id.frame_layout_detail_in_main);
+        frameLayoutDetailMain = (FrameLayout) findViewById(R.id.frame_layout_detail_in_main);
         isTwoPlanMode = frameLayoutDetailMain != null;
 
         if (savedInstanceState == null) {
@@ -258,10 +264,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransavtion = fragmentManager.beginTransaction();
 
-            DetailFragment df=new DetailFragment();
+            DetailFragment df = new DetailFragment();
             df.setArguments(putCursordatainToBundle(c));
             df.setIsTwoPlanMode(true);
-            fragmentTransavtion.replace(R.id.frame_layout_detail_in_main,df);
+            fragmentTransavtion.replace(R.id.frame_layout_detail_in_main, df);
             fragmentTransavtion.commit();
 
 
