@@ -204,6 +204,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             myRecyclerView.setAdapter(myrecycleViewadapter);
             myrecycleViewadapter.setOnItemClickListener(this);
         } else {
+            if (getIsTwoPlanMode())
+                myrecycleViewadapter.setCellWidth(screenWidth / 3);
+            else
+                myrecycleViewadapter.setCellWidth(screenWidth / 2);
             myrecycleViewadapter.swapCursor(data);
         }
 
