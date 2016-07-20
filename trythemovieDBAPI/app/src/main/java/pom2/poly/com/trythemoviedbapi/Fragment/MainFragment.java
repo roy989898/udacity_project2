@@ -98,12 +98,13 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         //get the old setting
 
-        SharedPreferences old_sharedPref = getContext().getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
+        /*SharedPreferences old_sharedPref = getContext().getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
         old_perf_sort_op = old_sharedPref.getString(getResources().getString(R.string.old_pref_sort__key), "pop");
 
         if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE) || !perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
             updateMovie();
-        }
+        }*/
+        updateMovie();
     }
 
     @Override
