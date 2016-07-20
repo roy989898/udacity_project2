@@ -16,21 +16,31 @@ import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
  * Created by User on 26/1/2016.
  */
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyHolder> {
+    private static MyClickListener myClickListener;
     Cursor mcursor;
     Context mcontext;
-    private static MyClickListener myClickListener;
+    private double cellWidth;
 
     public MyRecyclerViewAdapter(Cursor cursor, Context context) {
         this.mcursor = cursor;
         this.mcontext = context;
     }
 
+    public double getCellWidth() {
+        return cellWidth;
+    }
+
+    public void setCellWidth(double cellWidth) {
+        this.cellWidth = cellWidth;
+    }
+
     public Cursor getCursor() {
         return mcursor;
     }
-    public void swapCursor(Cursor d){
 
-        this.mcursor=d;
+    public void swapCursor(Cursor d) {
+
+        this.mcursor = d;
         notifyDataSetChanged();
     }
 
@@ -46,6 +56,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(MyHolder holder, int position) {
         mcursor.moveToPosition(position);
         ImageView imv = holder.iv1;
+
+        imv.getLayoutParams().width= (int) cellWidth;
+        imv.getLayoutParams().height= (int) (cellWidth*3/2);
+
         Picasso picasso = Picasso.with(mcontext);
         //picasso.setLoggingEnabled(true);
         picasso.load(mcursor.getString(mcursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH))).into(imv);
@@ -57,7 +71,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return mcursor.getCount();
     }
 
-    public  class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public void setOnItemClickListener(MyClickListener myClickListener) {
+        this.myClickListener = myClickListener;
+    }
+
+    public interface MyClickListener {
+        void onItemClick(int position, View v);
+    }
+
+    public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView iv1;
 
         public MyHolder(View itemView) {
@@ -69,16 +91,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         @Override
         public void onClick(View v) {
-            myClickListener.onItemClick(getPosition(),v);
+            myClickListener.onItemClick(getPosition(), v);
         }
-    }
-    public interface MyClickListener {
-         void onItemClick(int position, View v);
-    }
-
-
-
-    public void setOnItemClickListener(MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
     }
 }

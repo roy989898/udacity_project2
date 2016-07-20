@@ -1,7 +1,6 @@
 package pom2.poly.com.trythemoviedbapi.Fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -17,12 +16,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+
+import com.orhanobut.logger.Logger;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.GdataFromMOVIEDBtask;
 import pom2.poly.com.trythemoviedbapi.MyRecyclerViewAdapter;
 import pom2.poly.com.trythemoviedbapi.R;
+import pom2.poly.com.trythemoviedbapi.SpacesItemDecoration;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbHelper;
 import pom2.poly.com.trythemoviedbapi.Utility;
@@ -40,7 +43,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private StaggeredGridLayoutManager mLayoutManager;
     private String perf_sort_pop_top_fav;
     private String old_perf_sort_op;
-    private Boolean isTwoPlanMode=false;
+    private Boolean isTwoPlanMode = false;
+    private Callback mActivity;
+    private int screenWidth;
 
     public Boolean getIsTwoPlanMode() {
         return isTwoPlanMode;
@@ -50,8 +55,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         this.isTwoPlanMode = isTwoPlanMode;
         return this;
     }
-
-    private Callback mActivity;
 
     @Override
     public void onPause() {
@@ -118,16 +121,35 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        if(isTwoPlanMode){
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+        //TODO test the width of the fragment
+        view.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        screenWidth = view.getWidth();
+                        Logger.d("width: " + screenWidth + "");
+
+
+                    }
+                });
+
+
+        if (isTwoPlanMode) {
             mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        }else{
+        } else {
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         }
 
         ButterKnife.bind(this, view);
 
         myRecyclerView.setLayoutManager(mLayoutManager);
+
+//        SpacesItemDecoration decoration=new SpacesItemDecoration(16);
+
+        myRecyclerView.addItemDecoration(new SpacesItemDecoration(0, 0, 0, 0));
+
         return view;
     }
 
@@ -173,6 +195,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         if (myrecycleViewadapter == null) {
             myrecycleViewadapter = new MyRecyclerViewAdapter(data, getContext());
+            myrecycleViewadapter.setCellWidth(screenWidth / 2);
             myRecyclerView.setAdapter(myrecycleViewadapter);
             myrecycleViewadapter.setOnItemClickListener(this);
         } else {

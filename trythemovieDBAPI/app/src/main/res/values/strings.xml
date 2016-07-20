@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TrythemovieDBAPI</string>
+    <string name="app_name">TheMovie</string>
     <string name="api_key" translatable="false">db9db09d5d4c08b057a2aefbeea458b0</string>
     <string name="setting">Setting</string>
     <string name="pref_sort_title">Sort by</string>
