@@ -23,6 +23,7 @@ import com.orhanobut.logger.Logger;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pom2.poly.com.trythemoviedbapi.Activity.MainActivity;
 import pom2.poly.com.trythemoviedbapi.GdataFromMOVIEDBtask;
 import pom2.poly.com.trythemoviedbapi.MyRecyclerViewAdapter;
 import pom2.poly.com.trythemoviedbapi.R;
@@ -44,18 +45,13 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private StaggeredGridLayoutManager mLayoutManager;
     private String perf_sort_pop_top_fav;
     private String old_perf_sort_op;
-    private Boolean isTwoPlanMode = false;
     private Callback mActivity;
+    private MainActivity mainActivity;
     private int screenWidth;
 
-    public Boolean getIsTwoPlanMode() {
-        return isTwoPlanMode;
-    }
 
-    public MainFragment setIsTwoPlanMode(Boolean isTwoPlanMode) {
-        this.isTwoPlanMode = isTwoPlanMode;
-        return this;
-    }
+
+
 
     @Override
     public void onPause() {
@@ -71,6 +67,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = (Callback) activity;
+        mainActivity= (MainActivity) activity;
     }
 
     @Override
@@ -136,7 +133,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 });
 
 
-        if (isTwoPlanMode) {
+        if (mainActivity.getIsTwoPlanMode()&&!isPortrait()) {
             mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         } else {
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -196,7 +193,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         if (myrecycleViewadapter == null) {
             myrecycleViewadapter = new MyRecyclerViewAdapter(data, getContext());
 
-            if (getIsTwoPlanMode())
+            if (mainActivity.getIsTwoPlanMode()&&!isPortrait())
                 myrecycleViewadapter.setCellWidth(screenWidth / 3);
             else
                 myrecycleViewadapter.setCellWidth(screenWidth / 2);
@@ -204,7 +201,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             myRecyclerView.setAdapter(myrecycleViewadapter);
             myrecycleViewadapter.setOnItemClickListener(this);
         } else {
-            if (getIsTwoPlanMode())
+            if (mainActivity.getIsTwoPlanMode()&&!isPortrait())
                 myrecycleViewadapter.setCellWidth(screenWidth / 3);
             else
                 myrecycleViewadapter.setCellWidth(screenWidth / 2);

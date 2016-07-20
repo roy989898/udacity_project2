@@ -26,6 +26,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
     FrameLayout frameLayoutDetailMain;
 
+    public static Boolean getIsTwoPlanMode() {
+        return isTwoPlanMode;
+    }
+
 
 //    private ArrayList<Movie> movieArrayList;
 
@@ -94,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
         if (savedInstanceState == null) {
             MainFragment mainFragment = new MainFragment();
-            mainFragment.setIsTwoPlanMode(isTwoPlanMode);
             fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
             fragmentTransaction.commit();
 
