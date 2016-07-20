@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     }*/
 
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         }
         return true;
     }
-
+*/
     @Override
     public void onItemClick(int position, View v, Cursor c) {
         /*FragmentManager fragmentManager=getSupportFragmentManager();
