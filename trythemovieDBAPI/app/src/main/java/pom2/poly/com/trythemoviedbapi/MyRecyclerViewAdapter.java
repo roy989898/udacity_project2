@@ -54,15 +54,19 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     @Override
     public void onBindViewHolder(MyHolder holder, int position) {
-        mcursor.moveToPosition(position);
-        ImageView imv = holder.iv1;
 
-        imv.getLayoutParams().width= (int) cellWidth;
-        imv.getLayoutParams().height= (int) (cellWidth*3/2);
+        if(!mcursor.isClosed()){
+            mcursor.moveToPosition(position);
+            ImageView imv = holder.iv1;
 
-        Picasso picasso = Picasso.with(mcontext);
-        //picasso.setLoggingEnabled(true);
-        picasso.load(mcursor.getString(mcursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH))).into(imv);
+            imv.getLayoutParams().width= (int) cellWidth;
+            imv.getLayoutParams().height= (int) (cellWidth*3/2);
+
+            Picasso picasso = Picasso.with(mcontext);
+            //picasso.setLoggingEnabled(true);
+            picasso.load(mcursor.getString(mcursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH))).into(imv);
+        }
+
 
     }
 

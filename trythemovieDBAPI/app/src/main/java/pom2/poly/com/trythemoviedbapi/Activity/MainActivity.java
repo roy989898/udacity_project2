@@ -16,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
+import com.orhanobut.logger.Logger;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.Fragment.DetailFragment;
@@ -116,12 +118,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         isTwoPlanMode = frameLayoutDetailMain != null;
 
         if (savedInstanceState == null) {
+
             mainFragment = new MainFragment();
-            fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
+            Logger.d("create a mainFragment");
+            fragmentTransaction.add(R.id.frame_layout_main, mainFragment,"f1");
             fragmentTransaction.commit();
 
-
+        }else{
+            mainFragment= (MainFragment) getSupportFragmentManager().findFragmentByTag("f1");
         }
+
+
 
         preference = getSharedPreferences(getString(R.string.sharedPreferenceName), Context.MODE_PRIVATE);
         editor = preference.edit();
@@ -164,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 //        outState.putParcelableArrayList(MOVIE_KEY, movieArrayList);
+
     }
 
 

@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+
 import com.orhanobut.logger.Logger;
 
 import butterknife.Bind;
@@ -60,6 +61,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         perf_sort_pop_top_fav = preference.getString(getResources().getString(R.string.pref_sort__key), Utility.POP_MOVIE);
         GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(getContext(), perf_sort_pop_top_fav);
         task.execute();
+        initCursorLoader();
     }
 
     @Override
@@ -73,6 +75,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onResume() {
         super.onResume();
         Logger.d("MainFragment,inResume");
+
+    }
+
+    private void initCursorLoader(){
         switch (perf_sort_pop_top_fav) {
             case Utility.POP_MOVIE:
                 Log.i("loader", "POP_MOVIE");
@@ -106,7 +112,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE) || !perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
             updateMovie();
         }*/
-        updateMovie();
+        Logger.d("onStart");
+//        updateMovie();
     }
 
     @Override
@@ -185,7 +192,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.i("onLoadFinished", "onLoadFinished");
+        Log.i("onLoadFinished2", "onLoadFinished :"  );
 //        myrecycleViewadapter.swapCursor(data);
         //myCursorAdapter.notifyDataSetChanged();
 //        showCursorContent(data);
