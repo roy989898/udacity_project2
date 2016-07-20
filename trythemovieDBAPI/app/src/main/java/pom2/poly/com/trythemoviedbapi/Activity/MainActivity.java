@@ -8,10 +8,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     FrameLayout frameLayoutDetailMain;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.spSortMode)
+    Spinner spSortMode;
+    private ArrayAdapter<String> sortArray;
 
     public static Boolean getIsTwoPlanMode() {
         return isTwoPlanMode;
@@ -94,6 +97,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        sortArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.pref_sort_entries));
+        spSortMode.setAdapter(sortArray);
 
         FragmentManager fragementManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragementManager.beginTransaction();
@@ -235,22 +241,22 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     }*/
 
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+    /* @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+         getMenuInflater().inflate(R.menu.main, menu);
+         return true;
+     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingActivity.class));
-                return true;
-        }
-        return true;
-    }
-*/
+     @Override
+     public boolean onOptionsItemSelected(MenuItem item) {
+         switch (item.getItemId()) {
+             case R.id.action_settings:
+                 startActivity(new Intent(this, SettingActivity.class));
+                 return true;
+         }
+         return true;
+     }
+ */
     @Override
     public void onItemClick(int position, View v, Cursor c) {
         /*FragmentManager fragmentManager=getSupportFragmentManager();
