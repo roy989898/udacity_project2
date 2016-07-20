@@ -1,6 +1,7 @@
 package pom2.poly.com.trythemoviedbapi.Fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -44,13 +45,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private MyRecyclerViewAdapter myrecycleViewadapter;
     private StaggeredGridLayoutManager mLayoutManager;
     private String perf_sort_pop_top_fav;
-    private String old_perf_sort_op;
     private Callback mActivity;
     private MainActivity mainActivity;
     private int screenWidth;
-
-
-
+    private SharedPreferences preference;
 
 
     @Override
@@ -58,8 +56,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onPause();
     }
 
-    private void updateMovie() {
-        GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(getContext(), old_perf_sort_op, perf_sort_pop_top_fav);
+    public void updateMovie() {
+        perf_sort_pop_top_fav = preference.getString(getResources().getString(R.string.pref_sort__key), Utility.POP_MOVIE);
+        GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(getContext(), perf_sort_pop_top_fav);
         task.execute();
     }
 
@@ -73,6 +72,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onResume() {
         super.onResume();
+        Logger.d("MainFragment,inResume");
         switch (perf_sort_pop_top_fav) {
             case Utility.POP_MOVIE:
                 Log.i("loader", "POP_MOVIE");
@@ -93,8 +93,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        perf_sort_pop_top_fav = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
+
+
         //Toast.makeText(this, perf_sort_op, Toast.LENGTH_SHORT).show();
 
         //get the old setting
@@ -112,8 +112,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MovieDbHelper movieDbHelper = new MovieDbHelper(getContext());
-        movieDbHelper.getWritableDatabase();
+        preference = getActivity().getSharedPreferences(getString(R.string.sharedPreferenceName), Context.MODE_PRIVATE);
+        perf_sort_pop_top_fav = preference.getString(getResources().getString(R.string.pref_sort__key), Utility.POP_MOVIE);
     }
 
     @Nullable

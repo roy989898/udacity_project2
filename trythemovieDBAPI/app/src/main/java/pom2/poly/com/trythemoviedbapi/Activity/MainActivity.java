@@ -1,6 +1,8 @@
 package pom2.poly.com.trythemoviedbapi.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
@@ -22,7 +25,7 @@ import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 import pom2.poly.com.trythemoviedbapi.Utility;
 
 
-public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
+public class MainActivity extends AppCompatActivity implements MainFragment.Callback, AdapterView.OnItemSelectedListener {
 
     private static Boolean isTwoPlanMode = false;
 
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     @Bind(R.id.spSortMode)
     Spinner spSortMode;
     private ArrayAdapter<String> sortArray;
+    private SharedPreferences preference;
+    private SharedPreferences.Editor editor;
+    private MainFragment mainFragment;
 
     public static Boolean getIsTwoPlanMode() {
         return isTwoPlanMode;
@@ -100,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
         sortArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.pref_sort_entries));
         spSortMode.setAdapter(sortArray);
+        spSortMode.setOnItemSelectedListener(this);
 
         FragmentManager fragementManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragementManager.beginTransaction();
@@ -109,12 +116,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         isTwoPlanMode = frameLayoutDetailMain != null;
 
         if (savedInstanceState == null) {
-            MainFragment mainFragment = new MainFragment();
+            mainFragment = new MainFragment();
             fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
             fragmentTransaction.commit();
 
 
         }
+
+        preference = getSharedPreferences(getString(R.string.sharedPreferenceName), Context.MODE_PRIVATE);
+        editor = preference.edit();
 
 
         //S
@@ -306,6 +316,41 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
         bundle.putString(Utility.BUNDLE_KEY_M_ID, m_id);
         return bundle;
+    }
+
+//    for the spSortMode
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        switch (position) {
+            case 0:
+//                pop
+                editor.putString(getString(R.string.pref_sort__key), Utility.POP_MOVIE);
+                editor.commit();
+                break;
+
+            case 1:
+//                High rated
+                editor.putString(getString(R.string.pref_sort__key), Utility.TOP_MOVIE);
+                editor.commit();
+                break;
+
+            case 2:
+//                fav
+                editor.putString(getString(R.string.pref_sort__key), Utility.FAV_MOVIE);
+                editor.commit();
+                break;
+        }
+
+        if (mainFragment != null)
+            mainFragment.updateMovie();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     /*private Config getConfigData() {

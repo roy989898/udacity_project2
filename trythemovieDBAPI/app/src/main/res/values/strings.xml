@@ -10,4 +10,7 @@
     <string name="highest_rated">Highest-rated</string>
     <string name="user_favourite">Favourite</string>
 
+    <string name="sharedPreferenceName">sharedPreferenceName</string>
+
+
 </resources>

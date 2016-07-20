@@ -2,7 +2,6 @@ package pom2.poly.com.trythemoviedbapi;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,29 +20,16 @@ import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-/**
- * Created by User on 30/1/2016.
- */
 public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
     private String perf_sort_pop_top_fav;
-    private String old_perf_sort_op;
     private Context mContext = null;
 
-    public GdataFromMOVIEDBtask(Context mContext, String old_perf_sort_op, String perf_sort_pop_top_fav) {
+    public GdataFromMOVIEDBtask(Context mContext, String perf_sort_pop_top_fav) {
         super();
         this.mContext = mContext;
-        this.old_perf_sort_op = old_perf_sort_op;
         this.perf_sort_pop_top_fav = perf_sort_pop_top_fav;
     }
 
-    public String getOld_perf_sort_op() {
-        return old_perf_sort_op;
-    }
-
-    public GdataFromMOVIEDBtask setOld_perf_sort_op(String old_perf_sort_op) {
-        this.old_perf_sort_op = old_perf_sort_op;
-        return this;
-    }
 
     public String getPerf_sort_pop_top_fav() {
         return perf_sort_pop_top_fav;
