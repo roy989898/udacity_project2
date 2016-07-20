@@ -109,12 +109,14 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
         //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
 
         //after update make the old_perf_sort_op and  perf_sort_op be the same value
-        if (!old_perf_sort_op.equals(perf_sort_pop_top_fav)) {
+
+        //TODO
+        /*if (!old_perf_sort_op.equals(perf_sort_pop_top_fav)) {
             SharedPreferences sharePreference = mContext.getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharePreference.edit();
             editor.putString(mContext.getResources().getString(R.string.old_pref_sort__key), perf_sort_pop_top_fav);
             editor.commit();
-        }
+        }*/
 
 
     }

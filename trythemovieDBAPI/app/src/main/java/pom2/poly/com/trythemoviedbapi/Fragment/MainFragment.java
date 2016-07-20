@@ -98,6 +98,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         //get the old setting
 
+        //TODO
         /*SharedPreferences old_sharedPref = getContext().getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
         old_perf_sort_op = old_sharedPref.getString(getResources().getString(R.string.old_pref_sort__key), "pop");
 
