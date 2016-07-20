@@ -11,9 +11,10 @@
 
     <Spinner
         android:id="@+id/spSortMode"
-        android:layout_width="match_parent"
-        android:popupBackground="?attr/colorPrimary"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:popupBackground="?attr/colorPrimary"
         android:spinnerMode="dropdown" />
 
 
