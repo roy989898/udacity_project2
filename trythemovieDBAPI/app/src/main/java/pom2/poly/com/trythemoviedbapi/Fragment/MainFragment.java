@@ -2,6 +2,7 @@ package pom2.poly.com.trythemoviedbapi.Fragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -127,7 +128,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-
                         screenWidth = view.getWidth();
                         Logger.d("width: " + screenWidth + "");
 
@@ -188,14 +188,19 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.i("loader", "onLoadFinished");
+        Log.i("onLoadFinished", "onLoadFinished");
 //        myrecycleViewadapter.swapCursor(data);
         //myCursorAdapter.notifyDataSetChanged();
 //        showCursorContent(data);
 
         if (myrecycleViewadapter == null) {
             myrecycleViewadapter = new MyRecyclerViewAdapter(data, getContext());
-            myrecycleViewadapter.setCellWidth(screenWidth / 2);
+
+            if (getIsTwoPlanMode())
+                myrecycleViewadapter.setCellWidth(screenWidth / 3);
+            else
+                myrecycleViewadapter.setCellWidth(screenWidth / 2);
+
             myRecyclerView.setAdapter(myrecycleViewadapter);
             myrecycleViewadapter.setOnItemClickListener(this);
         } else {
@@ -222,8 +227,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         mActivity.onItemClick(position, v, cursor);
     }
 
+    private boolean isPortrait() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
     public interface Callback {
         void onItemClick(int position, View v, Cursor c);
     }
-
 }
