@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nested_scrollView"
-    android:background="@color/mainactivity_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mainactivity_background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
@@ -43,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,8 +63,10 @@
             android:id="@+id/tvOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Overview"
-            android:textColor="#030303" />
+            android:paddingBottom="@dimen/detail_fragmnet_bottom_padding"
+            android:paddingTop="@dimen/detail_fragmnet_top_padding"
+            android:textColor="@color/secondary_text"
+            tools:text="Overview" />
 
         <TextView
             android:id="@+id/tvTrailer"
