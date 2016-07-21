@@ -16,5 +16,6 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     
-    <color name="expanedeTextTitle">#00b6b6b6</color>
+    <color name="expandeTextTitle_shadow">#212121</color>
+    <color name="expandeTextTitle_TextCo9lor">#00212121</color>
 </resources>

@@ -143,25 +143,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         tvTitle.setText(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
 
-        Target target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                BitmapDrawable backdround = new BitmapDrawable(getResources(), bitmap);
-                backdround.setAlpha(150);
-                lineayout1.setBackgroundDrawable(backdround);
-            }
 
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {    //當圖片加載失敗時調用
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {     //當任務被提交時調用
-            }
-        };
-
-
-        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_POSTERPATH)).into(target);
 //        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
         appBarImg.setImageURI(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH));
 
@@ -178,6 +160,11 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         //set the ActionBar
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        //add the back button
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         //Load trailer with the m_id
         new getTrailerTask().execute(m_id);
@@ -185,13 +172,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         //Load review with the m_id
         new getReviewTask().execute(m_id);
 
-        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                int offset = nestedScrollView.computeVerticalScrollOffset();
-                Log.d(this.getClass().getSimpleName(), offset + "");
-            }
-        });
+
 
 
         return view;
