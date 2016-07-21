@@ -12,5 +12,7 @@
 
     <string name="sharedPreferenceName">sharedPreferenceName</string>
 
+    <string name="detailFragmnet_releaseDate">Release Date: </string>
+
 
 </resources>

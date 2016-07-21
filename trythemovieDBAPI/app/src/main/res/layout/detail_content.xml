@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nested_scrollView"
+    android:background="@color/mainactivity_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -29,62 +30,64 @@
             android:src="@drawable/ic_star_black_36dp" />
 
         <RatingBar
+            android:id="@+id/ratingBar"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
-            android:id="@+id/ratingBar"
             android:layout_height="wrap_content"
             android:isIndicator="true"
             android:numStars="5"
             android:rating="5"
             android:stepSize="0.1" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detailFragmnet_releaseDate"
+                android:textColor="@color/primary_text" />
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="date"
-                android:textColor="#030303" />
-
-            <TextView
-                android:id="@+id/tvOverview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Overview"
-                android:textColor="#030303" />
-
-            <TextView
-                android:id="@+id/tvTrailer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Trailer"
-                android:textColor="@color/trailer_TopicColor" />
-
-            <ListView
-                android:id="@+id/lvTrailer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Review"
-                android:textColor="@color/review_TopicColor" />
-
-            <ListView
-                android:id="@+id/lvShowReview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
+                android:text="@string/detailFragmnet_releaseDate"
+                android:textColor="@color/secondary_text" />
         </LinearLayout>
 
+
+        <TextView
+            android:id="@+id/tvOverview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Overview"
+            android:textColor="#030303" />
+
+        <TextView
+            android:id="@+id/tvTrailer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trailer"
+            android:textColor="@color/trailer_TopicColor" />
+
+        <ListView
+            android:id="@+id/lvTrailer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Review"
+            android:textColor="@color/review_TopicColor" />
+
+        <ListView
+            android:id="@+id/lvShowReview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
