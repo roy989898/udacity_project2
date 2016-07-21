@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -81,6 +83,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     Toolbar toolbar;
     @Bind(R.id.appBar_img)
     SimpleDraweeView appBarImg;
+    @Bind(R.id.nested_scrollView)
+    NestedScrollView nestedScrollView;
 
 
     private String m_id = null;
@@ -180,6 +184,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         //Load review with the m_id
         new getReviewTask().execute(m_id);
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int offset = nestedScrollView.computeVerticalScrollOffset();
+                Log.d(this.getClass().getSimpleName(), offset + "");
+            }
+        });
 
 
         return view;
