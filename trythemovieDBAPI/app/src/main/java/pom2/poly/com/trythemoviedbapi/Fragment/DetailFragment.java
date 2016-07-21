@@ -203,12 +203,12 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         int i = data.getCount();
         if (i > 0) {
             //in the favourite table
-            imb1.setImageResource(R.drawable.ic_star_white_36dp);
-            imb1.setTag("R.drawable.ic_star_white_36dp");
+            imb1.setImageResource(R.drawable.ic_favorite_black_36dp);
+            imb1.setTag("R.drawable.ic_favorite_black_36dp");
         } else {
             // not in the favourite table
-            imb1.setImageResource(R.drawable.ic_star_black_36dp);
-            imb1.setTag("(R.drawable.ic_star_black_36dp");
+            imb1.setImageResource(R.drawable.ic_favorite_border_black_36dp);
+            imb1.setTag("R.drawable.ic_favorite_border_black_36dp");
         }
 
 //        data.close();
@@ -227,14 +227,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 //                Toast.makeText(this,m_id,Toast.LENGTH_SHORT).show();
 
 
-                if (imb1.getTag().equals("R.drawable.ic_star_white_36dp")) {
+                if (imb1.getTag().equals("R.drawable.ic_favorite_black_36dp")) {
                     //the star button is white now
 
                     //delete the  m_id from the favourite table
 
                     getContext().getContentResolver().delete(MovieDbContract.FavouriteEntry.buildFavouriteWithID(Long.parseLong(m_id)), null, null);
 
-                    imb1.setImageResource(R.drawable.ic_star_black_36dp);
+                    imb1.setImageResource(R.drawable.ic_favorite_border_black_36dp);
                 } else {
                     //the star button is black now
                     //insert the m_id to the favourite table
@@ -242,7 +242,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
                     cv.put(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY, Long.parseLong(m_id));
                     getContext().getContentResolver().insert(MovieDbContract.FavouriteEntry.CONTENT_URI, cv);
 
-                    imb1.setImageResource(R.drawable.ic_star_white_36dp);
+                    imb1.setImageResource(R.drawable.ic_favorite_black_36dp);
                 }
 
                 break;
