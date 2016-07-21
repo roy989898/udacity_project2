@@ -4,13 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -26,12 +25,11 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -57,13 +55,20 @@ import retrofit2.Retrofit;
  */
 public class DetailFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static int CURSORLOADER_ID;
-    //    @Bind(R.id.imb1)
-    ImageButton imb1;
-
+    @Bind(R.id.appBar_img)
+    SimpleDraweeView appBarImg;
     @Bind(R.id.tvTitle)
     TextView tvTitle;
-    @Bind(R.id.tvRate)
-    TextView tvRate;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.toolbar_layout)
+    CollapsingToolbarLayout toolbarLayout;
+    @Bind(R.id.appbar)
+    AppBarLayout appbar;
+    @Bind(R.id.imb1)
+    ImageButton imb1;
+    @Bind(R.id.ratingBar)
+    RatingBar ratingBar;
     @Bind(R.id.tvDate)
     TextView tvDate;
     @Bind(R.id.tvOverview)
@@ -76,13 +81,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     TextView textView;
     @Bind(R.id.lvShowReview)
     ListView lvShowReview;
-
     @Bind(R.id.lineayout1)
     LinearLayout lineayout1;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-    @Bind(R.id.appBar_img)
-    SimpleDraweeView appBarImg;
     @Bind(R.id.nested_scrollView)
     NestedScrollView nestedScrollView;
 
@@ -126,6 +126,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         View view = inflater.inflate(R.layout.fragment_detail_v2, container, false);
         Log.i("DetailFragment", "onCreateView");
         ButterKnife.bind(this, view);
+
         imb1 = (ImageButton) view.findViewById(R.id.imb1);
 
         //        Movie aMovie = getIntent().getParcelableExtra(DetailActivity.class.getName());
@@ -147,7 +148,11 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 //        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
         appBarImg.setImageURI(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH));
 
-        tvRate.setText(infBundle.getString(Utility.BUNDLE_KEY_RATE));
+        double rate=Double.parseDouble(infBundle.getString(Utility.BUNDLE_KEY_RATE));
+        Double numberOfstra = rate / 10*5;
+        Logger.d(rate+"");
+
+        ratingBar.setNumStars(numberOfstra.intValue());
         tvDate.setText(infBundle.getString(Utility.BUNDLE_KEY_DATE));
         tvOverview.setText(infBundle.getString(Utility.BUNDLE_KEY_OVERVIEW));
 
@@ -161,7 +166,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         //set the ActionBar
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //add the back button
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
       /*  ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
@@ -171,8 +176,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         //Load review with the m_id
         new getReviewTask().execute(m_id);
-
-
 
 
         return view;
