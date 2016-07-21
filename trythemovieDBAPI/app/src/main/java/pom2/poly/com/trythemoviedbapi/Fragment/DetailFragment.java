@@ -162,8 +162,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //add the back button
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+      /*  ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
 
         //Load trailer with the m_id
