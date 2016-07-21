@@ -6,9 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 
@@ -55,16 +54,18 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public void onBindViewHolder(MyHolder holder, int position) {
 
-        if(!mcursor.isClosed()){
+        if (!mcursor.isClosed()) {
             mcursor.moveToPosition(position);
-            ImageView imv = holder.iv1;
+            SimpleDraweeView imv = holder.iv1;
 
-            imv.getLayoutParams().width= (int) cellWidth;
-            imv.getLayoutParams().height= (int) (cellWidth*3/2);
+            imv.getLayoutParams().width = (int) cellWidth;
+            imv.getLayoutParams().height = (int) (cellWidth * 3 / 2);
 
-            Picasso picasso = Picasso.with(mcontext);
+            /*Picasso picasso = Picasso.with(mcontext);
             //picasso.setLoggingEnabled(true);
-            picasso.load(mcursor.getString(mcursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH))).into(imv);
+            picasso.load(mcursor.getString(mcursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH))).into(imv);*/
+            imv.setImageURI((mcursor.getString(mcursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH))));
+
         }
 
 
@@ -84,11 +85,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView iv1;
+        SimpleDraweeView iv1;
 
         public MyHolder(View itemView) {
             super(itemView);
-            iv1 = (ImageView) itemView.findViewById(R.id.iv1_rey);
+            iv1 = (SimpleDraweeView) itemView.findViewById(R.id.my_image_view);
             itemView.setOnClickListener(this);
 
         }

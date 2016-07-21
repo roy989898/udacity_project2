@@ -3,6 +3,7 @@ package pom2.poly.com.trythemoviedbapi;
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
 
 import java.io.IOException;
@@ -35,6 +36,8 @@ public class MyApplication extends Application {
 
 // Use the InitializerBuilder to generate an Initializer
         Stetho.Initializer initializer = initializerBuilder.build();
+
+        Fresco.initialize(this);
 
 
     }
