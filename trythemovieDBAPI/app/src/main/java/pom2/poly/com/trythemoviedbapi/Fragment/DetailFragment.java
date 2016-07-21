@@ -15,18 +15,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -54,10 +55,9 @@ import retrofit2.Retrofit;
  */
 public class DetailFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static int CURSORLOADER_ID;
-//    @Bind(R.id.imb1)
+    //    @Bind(R.id.imb1)
     ImageButton imb1;
-    @Bind(R.id.iv1)
-    ImageView iv1;
+
     @Bind(R.id.tvTitle)
     TextView tvTitle;
     @Bind(R.id.tvRate)
@@ -77,6 +77,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
     @Bind(R.id.lineayout1)
     LinearLayout lineayout1;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.appBar_img)
+    SimpleDraweeView appBarImg;
 
 
     private String m_id = null;
@@ -98,7 +102,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //if do not save before ,infBundle will equal null
-        mContext=getContext();
+        mContext = getContext();
         if (savedInstanceState != null) {
             infBundle = (Bundle) savedInstanceState.get(Utility.BUNDLE_KEY_RESTORE_DETAIL_BUNDLE);
         }
@@ -115,7 +119,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_v2, container, false);
         Log.i("DetailFragment", "onCreateView");
         ButterKnife.bind(this, view);
         imb1 = (ImageButton) view.findViewById(R.id.imb1);
@@ -154,7 +158,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
 
         Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_POSTERPATH)).into(target);
-        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
+//        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
+        appBarImg.setImageURI(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH));
 
         tvRate.setText(infBundle.getString(Utility.BUNDLE_KEY_RATE));
         tvDate.setText(infBundle.getString(Utility.BUNDLE_KEY_DATE));
@@ -167,11 +172,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
 
+        //set the ActionBar
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         //Load trailer with the m_id
         new getTrailerTask().execute(m_id);
 
         //Load review with the m_id
         new getReviewTask().execute(m_id);
+
 
         return view;
     }
@@ -297,8 +306,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
                 lvTrailer.setAdapter(ta);
 //                lvTrailer.setMinimumHeight(20);
                 lvTrailer.setOnItemClickListener(this);
-            }catch (Exception e){
-                Log.e("onPostExecute error",e.toString());
+            } catch (Exception e) {
+                Log.e("onPostExecute error", e.toString());
             }
 
         }
@@ -321,8 +330,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
             try {
                 ReviewAdapter ra = new ReviewAdapter(mContext, reviewResult);
                 lvShowReview.setAdapter(ra);
-            }catch (Exception e){
-                Log.e("onPostExecute error",e.toString());
+            } catch (Exception e) {
+                Log.e("onPostExecute error", e.toString());
             }
 
         }
