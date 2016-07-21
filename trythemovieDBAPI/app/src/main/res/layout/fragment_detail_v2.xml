@@ -31,6 +31,17 @@
                 fresco:actualImageScaleType="centerCrop"
                 fresco:fadeDuration="300" />
 
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/detail_text_title_backgroundcolor"
+                android:gravity="center_horizontal"
+                android:text="Title"
+                android:textColor="@color/detail_text_title_color"
+                android:textSize="@dimen/detail_Title_text_size" />
+
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -79,14 +90,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="Title"
-                    android:textColor="#030303"
-                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/tvRate"

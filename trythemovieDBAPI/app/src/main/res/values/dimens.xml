@@ -3,4 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="detail_backdrop_height">180dp</dimen>
+    <dimen name="detail_Title_text_size">22sp</dimen>
 </resources>

@@ -18,4 +18,7 @@
     
     <color name="expandeTextTitle_shadow">#212121</color>
     <color name="expandeTextTitle_TextColor">#00212121</color>
+
+    <color name="detail_text_title_color">#FFFFFF</color>
+    <color name="detail_text_title_backgroundcolor">#d8212121</color>
 </resources>
