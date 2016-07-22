@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-
 import com.orhanobut.logger.Logger;
 
 import butterknife.Bind;
@@ -31,7 +30,6 @@ import pom2.poly.com.trythemoviedbapi.MyRecyclerViewAdapter;
 import pom2.poly.com.trythemoviedbapi.R;
 import pom2.poly.com.trythemoviedbapi.SpacesItemDecoration;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
-import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbHelper;
 import pom2.poly.com.trythemoviedbapi.Utility;
 
 /**
@@ -68,7 +66,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = (Callback) activity;
-        mainActivity= (MainActivity) activity;
+        mainActivity = (MainActivity) activity;
 
 
     }
@@ -77,11 +75,12 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onResume() {
         super.onResume();
         Logger.d("MainFragment,inResume");
-//        updateMovie();//TODO
+        if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE))
+            updateMovie();//TODO
 
     }
 
-    private void initCursorLoader(){
+    private void initCursorLoader() {
         switch (perf_sort_pop_top_fav) {
             case Utility.POP_MOVIE:
                 Log.i("loader", "POP_MOVIE");
@@ -102,7 +101,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onStart() {
         super.onStart();
-
 
 
         Logger.d("onStart");
@@ -133,7 +131,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 });
 
 
-        if (mainActivity.getIsTwoPlanMode()&&!isPortrait()) {
+        if (mainActivity.getIsTwoPlanMode() && !isPortrait()) {
             mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         } else {
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -185,7 +183,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.i("onLoadFinished2", "onLoadFinished :"  );
+        Log.i("onLoadFinished2", "onLoadFinished :");
 //        myrecycleViewadapter.swapCursor(data);
         //myCursorAdapter.notifyDataSetChanged();
 //        showCursorContent(data);
@@ -193,7 +191,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         if (myrecycleViewadapter == null) {
             myrecycleViewadapter = new MyRecyclerViewAdapter(data, getContext());
 
-            if (mainActivity.getIsTwoPlanMode()&&!isPortrait())
+            if (mainActivity.getIsTwoPlanMode() && !isPortrait())
                 myrecycleViewadapter.setCellWidth(screenWidth / 3);
             else
                 myrecycleViewadapter.setCellWidth(screenWidth / 2);
@@ -201,7 +199,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             myRecyclerView.setAdapter(myrecycleViewadapter);
             myrecycleViewadapter.setOnItemClickListener(this);
         } else {
-            if (mainActivity.getIsTwoPlanMode()&&!isPortrait())
+            if (mainActivity.getIsTwoPlanMode() && !isPortrait())
                 myrecycleViewadapter.setCellWidth(screenWidth / 3);
             else
                 myrecycleViewadapter.setCellWidth(screenWidth / 2);
