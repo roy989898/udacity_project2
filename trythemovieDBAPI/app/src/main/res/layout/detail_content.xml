@@ -68,17 +68,8 @@
             android:textColor="@color/secondary_text"
             tools:text="Overview" />
 
-        <TextView
-            android:id="@+id/tvTrailer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Trailer"
-            android:textColor="@color/trailer_TopicColor" />
 
-        <ListView
-            android:id="@+id/lvTrailer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvTrailer"

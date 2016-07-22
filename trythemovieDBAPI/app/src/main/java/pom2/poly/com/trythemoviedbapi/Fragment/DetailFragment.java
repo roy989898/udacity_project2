@@ -76,10 +76,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     TextView tvDate;
     @Bind(R.id.tvOverview)
     TextView tvOverview;
-    @Bind(R.id.tvTrailer)
-    TextView tvTrailer;
-    @Bind(R.id.lvTrailer)
-    ListView lvTrailer;
+
+
     @Bind(R.id.textView)
     TextView textView;
     @Bind(R.id.lvShowReview)
@@ -311,10 +309,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         protected void onPostExecute(List<Result> result) {
             super.onPostExecute(result);
             try {
-                TrailerAdapter ta = new TrailerAdapter(mContext, result);
+                /*TrailerAdapter ta = new TrailerAdapter(mContext, result);
                 lvTrailer.setAdapter(ta);
 //                lvTrailer.setMinimumHeight(20);
-                lvTrailer.setOnItemClickListener(this);
+                lvTrailer.setOnItemClickListener(this);*/
 
                 //TODO recycle view of trailer
                 recycleTrailerAdapter.swapData(result);
