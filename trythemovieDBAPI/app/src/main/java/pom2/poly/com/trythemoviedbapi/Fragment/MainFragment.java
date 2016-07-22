@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -56,7 +55,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     public void updateMovie() {
-        perf_sort_pop_top_fav = preference.getString(getResources().getString(R.string.pref_sort__key), Utility.POP_MOVIE);
+        if (perf_sort_pop_top_fav == null)
+            perf_sort_pop_top_fav = preference.getString(getResources().getString(R.string.pref_sort__key), Utility.POP_MOVIE);
+
         GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(getContext(), perf_sort_pop_top_fav);
         task.execute();
         initCursorLoader();
@@ -157,10 +158,12 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Loader<Cursor> cursorLoader = null;
-        if (perf_sort_pop_top_fav == null) {
+
+        //TODO
+       /* if (perf_sort_pop_top_fav == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
             perf_sort_pop_top_fav = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
-        }
+        }*/
         switch (perf_sort_pop_top_fav) {
             case Utility.TOP_MOVIE:
                 Log.i("loader", "onCreateLoader-TOP_MOVIE");
