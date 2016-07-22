@@ -84,25 +84,7 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
     @Override
     protected void onPostExecute(Movie[] movieArray) {
         super.onPostExecute(movieArray);
-        //Todo delete the Array adapter
-            /*if (movieArray != null) {
-                Log.i("GdataFromMOVIEDBtask", "in onPostExecute");
-                movieArrayList.clear();
-                movieArrayList.addAll(Arrays.asList(movieArray));
-                //myArrayAdapter.notifyDataSetChanged();
-            }*/
-        //for test the ContentProvider only
-        //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
 
-        //after update make the old_perf_sort_op and  perf_sort_op be the same value
-
-        //TODO
-        /*if (!old_perf_sort_op.equals(perf_sort_pop_top_fav)) {
-            SharedPreferences sharePreference = mContext.getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharePreference.edit();
-            editor.putString(mContext.getResources().getString(R.string.old_pref_sort__key), perf_sort_pop_top_fav);
-            editor.commit();
-        }*/
 
 
     }
@@ -184,8 +166,7 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
             Results result1 = getMovieDatav2(perf_sort_pop_top_fav);
             return MovieFactory.startMakeMovieArray(configr, result1);
         } else {
-            //select Favourite in the setting
-            //TODO
+
             MovieIdResult[] mra = getMviedResult();
             return MovieFactory.startMakeMovieArrayfromMovideResult(configr, mra);
         }

@@ -69,12 +69,15 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onAttach(activity);
         mActivity = (Callback) activity;
         mainActivity= (MainActivity) activity;
+
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Logger.d("MainFragment,inResume");
+//        updateMovie();//TODO
 
     }
 
@@ -101,19 +104,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onStart();
 
 
-        //Toast.makeText(this, perf_sort_op, Toast.LENGTH_SHORT).show();
 
-        //get the old setting
-
-        //TODO
-        /*SharedPreferences old_sharedPref = getContext().getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
-        old_perf_sort_op = old_sharedPref.getString(getResources().getString(R.string.old_pref_sort__key), "pop");
-
-        if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE) || !perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
-            updateMovie();
-        }*/
         Logger.d("onStart");
-//        updateMovie();
+
     }
 
     @Override
@@ -127,7 +120,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
-        //TODO test the width of the fragment
+
         view.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override

@@ -174,6 +174,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     //this method use the data from getConfigData and getMovieDatav2 ,to get the MOVIE object array
     /*private Movie[] getMOvieObject() {
