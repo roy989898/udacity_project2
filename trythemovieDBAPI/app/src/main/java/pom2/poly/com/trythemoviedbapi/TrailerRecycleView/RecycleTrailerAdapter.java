@@ -1,5 +1,6 @@
 package pom2.poly.com.trythemoviedbapi.TrailerRecycleView;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,12 +21,14 @@ import pom2.poly.com.trythemoviedbapi.R;
  */
 public class RecycleTrailerAdapter extends RecyclerView.Adapter<RecycleTrailerAdapter.ViewHolder> {
 
+    private  Context mContext;
     private List<Result> result;
 
-    public RecycleTrailerAdapter() {
+    public RecycleTrailerAdapter(Context context) {
+        mContext=context;
     }
 
-    public RecycleTrailerAdapter(List<Result> result) {
+    public RecycleTrailerAdapter(List<Result> result,Context context) {
         this.result = result;
     }
 
@@ -42,7 +45,7 @@ public class RecycleTrailerAdapter extends RecyclerView.Adapter<RecycleTrailerAd
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         Result trailer = result.get(position);
-        String imguri = String.format("http://img.youtube.com/vi/%s/0.jpg", trailer.getKey() + "");
+        String imguri = String.format(mContext.getResources().getString(R.string.youtubeTrailer_link), trailer.getKey() + "");
         Log.d(this.getClass().getSimpleName(), imguri);
         holder.traileImage.setImageURI(imguri);
 

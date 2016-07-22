@@ -16,8 +16,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -178,10 +178,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
 
         //set The recycle iew of trailer
-       LinearLayoutManager  layoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvTrailer.setLayoutManager(layoutManager);
 
-         recycleTrailerAdapter=new RecycleTrailerAdapter();
+        recycleTrailerAdapter = new RecycleTrailerAdapter(getContext());
         rvTrailer.setAdapter(recycleTrailerAdapter);
 
         //Load trailer with the m_id
@@ -342,8 +342,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
             try {
                 ReviewAdapter ra = new ReviewAdapter(mContext, reviewResult);
                 lvShowReview.setAdapter(ra);
-
-
 
 
             } catch (Exception e) {

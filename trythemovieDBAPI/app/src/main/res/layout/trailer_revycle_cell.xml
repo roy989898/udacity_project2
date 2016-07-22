@@ -7,10 +7,11 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/traileImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         fresco:actualImageScaleType="fitCenter"
         fresco:fadeDuration="300"
+        fresco:viewAspectRatio="1.3333"
 
         />
 </LinearLayout>
