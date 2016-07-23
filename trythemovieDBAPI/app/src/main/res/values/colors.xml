@@ -2,7 +2,6 @@
 <resources>
 
     <color name="mainactivity_background">#f4f1f1</color>
-    <color name="review_textColor">#0e0e0e</color>
     <color name="trailer_textColor">#0e0e0e</color>
     <color name="review_TopicColor">#ba17cf</color>
     <color name="trailer_TopicColor">#ba17cf</color>
