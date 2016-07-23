@@ -45,7 +45,6 @@ import pom2.poly.com.trythemoviedbapi.MovieAPI.TrailerResult.TrailerResult;
 import pom2.poly.com.trythemoviedbapi.R;
 import pom2.poly.com.trythemoviedbapi.ReviewAdapter;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
-import pom2.poly.com.trythemoviedbapi.TrailerAdapter;
 import pom2.poly.com.trythemoviedbapi.TrailerRecycleView.RecycleTrailerAdapter;
 import pom2.poly.com.trythemoviedbapi.Utility;
 import retrofit2.Call;
@@ -146,10 +145,33 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         }
 
+        bindDataToView(infBundle);
+
+        getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
+
+        //set the ActionBar
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        //add the back button
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
+      /*  ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
+
+
+
+
+        //Load trailer with the m_id
+        new getTrailerTask().execute(m_id);
+
+        //Load review with the m_id
+        new getReviewTask().execute(m_id);
+
+
+        return view;
+    }
+
+    private void bindDataToView(Bundle infBundle) {
         tvTitle.setText(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
-
-
-//        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
+        //        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
         appBarImg.setImageURI(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH));
 
         double rate = Double.parseDouble(infBundle.getString(Utility.BUNDLE_KEY_RATE));
@@ -165,16 +187,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         CURSORLOADER_ID = Integer.parseInt(m_id);
         imb1.setOnClickListener(this);
 
-        getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
-
-        //set the ActionBar
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        //add the back button
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
-      /*  ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
-
-
         //set The recycle iew of trailer
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvTrailer.setLayoutManager(layoutManager);
@@ -182,14 +194,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         recycleTrailerAdapter = new RecycleTrailerAdapter(getContext());
         rvTrailer.setAdapter(recycleTrailerAdapter);
 
-        //Load trailer with the m_id
-        new getTrailerTask().execute(m_id);
 
-        //Load review with the m_id
-        new getReviewTask().execute(m_id);
-
-
-        return view;
     }
 
     @Override
