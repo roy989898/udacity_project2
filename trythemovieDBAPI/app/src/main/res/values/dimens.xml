@@ -6,4 +6,5 @@
     <dimen name="detail_Title_text_size">22sp</dimen>
     <dimen name="detail_fragmnet_bottom_padding">10dp</dimen>
     <dimen name="detail_fragmnet_top_padding">10dp</dimen>
+    <dimen name="recycle_view_trailer_cell_margin">5dp</dimen>
 </resources>
