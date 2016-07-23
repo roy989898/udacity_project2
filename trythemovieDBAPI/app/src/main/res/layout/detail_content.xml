@@ -69,24 +69,29 @@
             tools:text="Overview" />
 
 
-
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvTrailer"
             android:layout_width="match_parent"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp" />
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Review"
-            android:textColor="@color/review_TopicColor" />
+            android:text="@string/detail_fragment_review"
+            android:textColor="@color/primary_text" />
 
         <ListView
             android:id="@+id/lvShowReview"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_fragment_emptyReview_text"
+            android:textColor="@color/secondary_text" />
 
     </LinearLayout>
 

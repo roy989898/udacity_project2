@@ -74,10 +74,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     TextView tvDate;
     @Bind(R.id.tvOverview)
     TextView tvOverview;
-
-
-    @Bind(R.id.textView)
-    TextView textView;
     @Bind(R.id.lvShowReview)
     ListView lvShowReview;
     @Bind(R.id.lineayout1)
@@ -86,6 +82,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     NestedScrollView nestedScrollView;
     @Bind(R.id.rvTrailer)
     RecyclerView rvTrailer;
+    @Bind(R.id.emptyView)
+    TextView emptyView;
 
 
     private String m_id = null;
@@ -183,12 +181,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         CURSORLOADER_ID = Integer.parseInt(m_id);
         imb1.setOnClickListener(this);
 
-        //set The recycle iew of trailer
+        //set The recycle view of trailer
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvTrailer.setLayoutManager(layoutManager);
 
         recycleTrailerAdapter = new RecycleTrailerAdapter(getContext());
         rvTrailer.setAdapter(recycleTrailerAdapter);
+
+        lvShowReview.setEmptyView(emptyView);
 
 
     }

@@ -16,5 +16,8 @@
 
     <string name="youtubeTrailer_link">http://img.youtube.com/vi/%s/0.jpg</string>
 
+    <string name="detail_fragment_review">Review</string>
+    <string name="detail_fragment_emptyReview_text">No Review</string>
+
 
 </resources>
