@@ -48,13 +48,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/detailFragmnet_releaseDate"
-                android:textColor="@color/primary_text" />
+                android:textColor="@color/primary_text"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/detailFragmnet_releaseDate"
                 android:textColor="@color/secondary_text" />
         </LinearLayout>
 
@@ -80,12 +80,14 @@
             android:paddingBottom="@dimen/detail_fragmnet__review_bottom_padding"
             android:paddingTop="@dimen/detail_fragmnet__review_top_padding"
             android:text="@string/detail_fragment_review"
-            android:textColor="@color/primary_text" />
+            android:textColor="@color/primary_text"
+            android:textStyle="bold" />
 
         <ListView
             android:id="@+id/lvShowReview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:scrollingCache="true" />
 
         <TextView
             android:id="@+id/emptyView"
