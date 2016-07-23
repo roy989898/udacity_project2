@@ -151,11 +151,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
 
         //set the ActionBar
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        //add the back button
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
-      /*  ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
+
+        if(!isTwoPlanMode){
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
+        }
+
+
+
 
 
         return view;
@@ -215,18 +219,21 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        int i = data.getCount();
-        if (i > 0) {
-            //in the favourite table
-            imb1.setImageResource(R.drawable.ic_favorite_black_36dp);
-            imb1.setTag("R.drawable.ic_favorite_black_36dp");
-        } else {
-            // not in the favourite table
-            imb1.setImageResource(R.drawable.ic_favorite_border_black_36dp);
-            imb1.setTag("R.drawable.ic_favorite_border_black_36dp");
-        }
+        if (imb1 != null) {
+            int i = data.getCount();
+            if (i > 0) {
+                //in the favourite table
+                imb1.setImageResource(R.drawable.ic_favorite_black_36dp);
+                imb1.setTag("R.drawable.ic_favorite_black_36dp");
+            } else {
+                // not in the favourite table
+                imb1.setImageResource(R.drawable.ic_favorite_border_black_36dp);
+                imb1.setTag("R.drawable.ic_favorite_border_black_36dp");
+            }
 
 //        data.close();
+        }
+
 
     }
 
