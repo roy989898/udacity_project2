@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -55,7 +56,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     public void updateMovie() {
-        if (perf_sort_pop_top_fav == null)
+
             perf_sort_pop_top_fav = preference.getString(getResources().getString(R.string.pref_sort__key), Utility.POP_MOVIE);
 
         GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(getContext(), perf_sort_pop_top_fav);
@@ -160,10 +161,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         Loader<Cursor> cursorLoader = null;
 
         //TODO
-       /* if (perf_sort_pop_top_fav == null) {
+
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
             perf_sort_pop_top_fav = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
-        }*/
+
         switch (perf_sort_pop_top_fav) {
             case Utility.TOP_MOVIE:
                 Log.i("loader", "onCreateLoader-TOP_MOVIE");
