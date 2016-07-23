@@ -23,7 +23,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -279,7 +278,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         startActivity(intent);
     }
 
-    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> implements AdapterView.OnItemClickListener {
+    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> implements RecycleTrailerAdapter.OnItemClickListener {
 
         @Override
         protected List<Result> doInBackground(String... params) {
@@ -318,6 +317,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
                 //TODO recycle view of trailer
                 recycleTrailerAdapter.swapData(result);
+                recycleTrailerAdapter.setIteamClickListener(this);
             } catch (Exception e) {
                 Log.e("onPostExecute error", e.toString());
             }
@@ -325,12 +325,17 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         }
 
         @Override
+        public void onItemClick(int position, String trailerKey) {
+            watchYoutubeVideo(trailerKey);
+        }
+
+        /*@Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             Result trailer = (Result) parent.getItemAtPosition(position);
             watchYoutubeVideo(trailer.getKey());
 
-        }
+        }*/
     }
 
     private class getReviewTask extends AsyncTask<String, Void, List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result>> {

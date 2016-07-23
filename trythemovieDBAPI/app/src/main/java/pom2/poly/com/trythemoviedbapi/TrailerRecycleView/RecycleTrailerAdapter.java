@@ -21,15 +21,20 @@ import pom2.poly.com.trythemoviedbapi.R;
  */
 public class RecycleTrailerAdapter extends RecyclerView.Adapter<RecycleTrailerAdapter.ViewHolder> {
 
-    private  Context mContext;
+    private Context mContext;
     private List<Result> result;
+    private OnItemClickListener listener;
 
     public RecycleTrailerAdapter(Context context) {
-        mContext=context;
+        mContext = context;
     }
 
-    public RecycleTrailerAdapter(List<Result> result,Context context) {
+    public RecycleTrailerAdapter(List<Result> result, Context context) {
         this.result = result;
+    }
+
+    public void setIteamClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -42,11 +47,20 @@ public class RecycleTrailerAdapter extends RecyclerView.Adapter<RecycleTrailerAd
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         Result trailer = result.get(position);
         String imguri = String.format(mContext.getResources().getString(R.string.youtubeTrailer_link), trailer.getKey() + "");
+        final String key = trailer.getKey();
+
         Log.d(this.getClass().getSimpleName(), imguri);
+
+        holder.traileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(position, key);
+            }
+        });
         holder.traileImage.setImageURI(imguri);
 
     }
@@ -63,6 +77,10 @@ public class RecycleTrailerAdapter extends RecyclerView.Adapter<RecycleTrailerAd
             return result.size();
         else
             return 0;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, String trailerKey);
     }
 
     static
