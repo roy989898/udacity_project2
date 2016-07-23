@@ -3,28 +3,33 @@ package pom2.poly.com.trythemoviedbapi.Fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+
+import com.orhanobut.logger.Logger;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pom2.poly.com.trythemoviedbapi.Activity.MainActivity;
 import pom2.poly.com.trythemoviedbapi.GdataFromMOVIEDBtask;
 import pom2.poly.com.trythemoviedbapi.MyRecyclerViewAdapter;
 import pom2.poly.com.trythemoviedbapi.R;
+import pom2.poly.com.trythemoviedbapi.SpacesItemDecoration;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
-import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbHelper;
 import pom2.poly.com.trythemoviedbapi.Utility;
 
 /**
@@ -39,39 +44,42 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private MyRecyclerViewAdapter myrecycleViewadapter;
     private StaggeredGridLayoutManager mLayoutManager;
     private String perf_sort_pop_top_fav;
-    private String old_perf_sort_op;
-    private Boolean isTwoPlanMode=false;
-
-    public Boolean getIsTwoPlanMode() {
-        return isTwoPlanMode;
-    }
-
-    public MainFragment setIsTwoPlanMode(Boolean isTwoPlanMode) {
-        this.isTwoPlanMode = isTwoPlanMode;
-        return this;
-    }
-
     private Callback mActivity;
+    private MainActivity mainActivity;
+    private int screenWidth;
+    private SharedPreferences preference;
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
-    private void updateMovie() {
-        GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(getContext(), old_perf_sort_op, perf_sort_pop_top_fav);
+
+
+    public void updateMovie() {
+
+            perf_sort_pop_top_fav = preference.getString(getResources().getString(R.string.pref_sort__key), Utility.POP_MOVIE);
+
+        GdataFromMOVIEDBtask task = new GdataFromMOVIEDBtask(getContext(), perf_sort_pop_top_fav);
         task.execute();
+        initCursorLoader();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = (Callback) activity;
+        mainActivity = (MainActivity) activity;
+
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Logger.d("MainFragment,inResume");
+        if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE))
+            updateMovie();//TODO
+
+    }
+
+    private void initCursorLoader() {
         switch (perf_sort_pop_top_fav) {
             case Utility.POP_MOVIE:
                 Log.i("loader", "POP_MOVIE");
@@ -92,42 +100,50 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        perf_sort_pop_top_fav = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
-        //Toast.makeText(this, perf_sort_op, Toast.LENGTH_SHORT).show();
 
-        //get the old setting
 
-        //TODO
-        /*SharedPreferences old_sharedPref = getContext().getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
-        old_perf_sort_op = old_sharedPref.getString(getResources().getString(R.string.old_pref_sort__key), "pop");
+        Logger.d("onStart");
 
-        if (perf_sort_pop_top_fav.equals(Utility.FAV_MOVIE) || !perf_sort_pop_top_fav.equals(old_perf_sort_op)) {
-            updateMovie();
-        }*/
-        updateMovie();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MovieDbHelper movieDbHelper = new MovieDbHelper(getContext());
-        movieDbHelper.getWritableDatabase();
+        preference = getActivity().getSharedPreferences(getString(R.string.sharedPreferenceName), Context.MODE_PRIVATE);
+        perf_sort_pop_top_fav = preference.getString(getResources().getString(R.string.pref_sort__key), Utility.POP_MOVIE);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        if(isTwoPlanMode){
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        view.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        screenWidth = view.getWidth();
+                        Logger.d("width: " + screenWidth + "");
+
+
+                    }
+                });
+
+
+        if (mainActivity.getIsTwoPlanMode() && !isPortrait()) {
             mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        }else{
+        } else {
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         }
 
         ButterKnife.bind(this, view);
 
         myRecyclerView.setLayoutManager(mLayoutManager);
+
+//        SpacesItemDecoration decoration=new SpacesItemDecoration(16);
+
+        myRecyclerView.addItemDecoration(new SpacesItemDecoration(0, 0, 0, 0));
+
         return view;
     }
 
@@ -140,10 +156,12 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Loader<Cursor> cursorLoader = null;
-        if (perf_sort_pop_top_fav == null) {
+
+        //TODO
+
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
             perf_sort_pop_top_fav = sharedPref.getString(getResources().getString(R.string.pref_sort__key), "pop");
-        }
+
         switch (perf_sort_pop_top_fav) {
             case Utility.TOP_MOVIE:
                 Log.i("loader", "onCreateLoader-TOP_MOVIE");
@@ -166,16 +184,26 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.i("loader", "onLoadFinished");
+        Log.i("onLoadFinished2", "onLoadFinished :");
 //        myrecycleViewadapter.swapCursor(data);
         //myCursorAdapter.notifyDataSetChanged();
 //        showCursorContent(data);
 
         if (myrecycleViewadapter == null) {
             myrecycleViewadapter = new MyRecyclerViewAdapter(data, getContext());
+
+            if (mainActivity.getIsTwoPlanMode() && !isPortrait())
+                myrecycleViewadapter.setCellWidth(screenWidth / 3);
+            else
+                myrecycleViewadapter.setCellWidth(screenWidth / 2);
+
             myRecyclerView.setAdapter(myrecycleViewadapter);
             myrecycleViewadapter.setOnItemClickListener(this);
         } else {
+            if (mainActivity.getIsTwoPlanMode() && !isPortrait())
+                myrecycleViewadapter.setCellWidth(screenWidth / 3);
+            else
+                myrecycleViewadapter.setCellWidth(screenWidth / 2);
             myrecycleViewadapter.swapCursor(data);
         }
 
@@ -199,8 +227,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         mActivity.onItemClick(position, v, cursor);
     }
 
+    private boolean isPortrait() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
     public interface Callback {
         void onItemClick(int position, View v, Cursor c);
     }
-
 }

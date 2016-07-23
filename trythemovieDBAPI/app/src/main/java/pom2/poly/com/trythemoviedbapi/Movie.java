@@ -58,18 +58,16 @@ public class Movie implements Parcelable {
         return popularity;
     }
 
-    public Movie setPopularity(double popularity) {
+    public void setPopularity(double popularity) {
         this.popularity = popularity;
-        return this;
     }
 
     public String getM_id() {
         return m_id;
     }
 
-    public Movie setM_id(String m_id) {
+    public void setM_id(String m_id) {
         this.m_id = m_id;
-        return this;
     }
 
     @Override

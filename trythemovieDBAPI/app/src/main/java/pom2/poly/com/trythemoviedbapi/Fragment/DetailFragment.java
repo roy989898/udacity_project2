@@ -4,31 +4,33 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +44,7 @@ import pom2.poly.com.trythemoviedbapi.MovieAPI.TrailerResult.TrailerResult;
 import pom2.poly.com.trythemoviedbapi.R;
 import pom2.poly.com.trythemoviedbapi.ReviewAdapter;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
-import pom2.poly.com.trythemoviedbapi.TrailerAdapter;
+import pom2.poly.com.trythemoviedbapi.TrailerRecycleView.RecycleTrailerAdapter;
 import pom2.poly.com.trythemoviedbapi.Utility;
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
@@ -54,51 +56,56 @@ import retrofit2.Retrofit;
  */
 public class DetailFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static int CURSORLOADER_ID;
-//    @Bind(R.id.imb1)
-    ImageButton imb1;
-    @Bind(R.id.iv1)
-    ImageView iv1;
+    @Bind(R.id.appBar_img)
+    SimpleDraweeView appBarImg;
     @Bind(R.id.tvTitle)
     TextView tvTitle;
-    @Bind(R.id.tvRate)
-    TextView tvRate;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.toolbar_layout)
+    CollapsingToolbarLayout toolbarLayout;
+    @Bind(R.id.appbar)
+    AppBarLayout appbar;
+    @Bind(R.id.imb1)
+    ImageButton imb1;
+    @Bind(R.id.ratingBar)
+    RatingBar ratingBar;
     @Bind(R.id.tvDate)
     TextView tvDate;
     @Bind(R.id.tvOverview)
     TextView tvOverview;
-    @Bind(R.id.tvTrailer)
-    TextView tvTrailer;
-    @Bind(R.id.lvTrailer)
-    ListView lvTrailer;
-    @Bind(R.id.textView)
-    TextView textView;
     @Bind(R.id.lvShowReview)
     ListView lvShowReview;
-
     @Bind(R.id.lineayout1)
     LinearLayout lineayout1;
+    @Bind(R.id.nested_scrollView)
+    NestedScrollView nestedScrollView;
+    @Bind(R.id.rvTrailer)
+    RecyclerView rvTrailer;
+    @Bind(R.id.emptyView)
+    TextView emptyView;
 
 
     private String m_id = null;
     private Boolean isTwoPlanMode = false;
     private Bundle infBundle = null;
     private Context mContext;
+    private RecycleTrailerAdapter recycleTrailerAdapter;
 
 
     public Boolean getIsTwoPlanMode() {
         return isTwoPlanMode;
     }
 
-    public DetailFragment setIsTwoPlanMode(Boolean isTwoPlanMode) {
+    public void setIsTwoPlanMode(Boolean isTwoPlanMode) {
         this.isTwoPlanMode = isTwoPlanMode;
-        return this;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //if do not save before ,infBundle will equal null
-        mContext=getContext();
+        mContext = getContext();
         if (savedInstanceState != null) {
             infBundle = (Bundle) savedInstanceState.get(Utility.BUNDLE_KEY_RESTORE_DETAIL_BUNDLE);
         }
@@ -115,9 +122,13 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail, container, false);
+
+
+        View view = inflater.inflate(R.layout.fragment_detail_v2, container, false);
         Log.i("DetailFragment", "onCreateView");
         ButterKnife.bind(this, view);
+
+
         imb1 = (ImageButton) view.findViewById(R.id.imb1);
 
         //        Movie aMovie = getIntent().getParcelableExtra(DetailActivity.class.getName());
@@ -133,52 +144,59 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
         }
 
+        bindDataToView(infBundle);
+
+
+        getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
+
+        //set the ActionBar
+
+        if(!isTwoPlanMode){
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
+        }
+
+
+
+
+
+        return view;
+    }
+
+    private void bindDataToView(Bundle infBundle) {
         tvTitle.setText(infBundle.getString(Utility.BUNDLE_KEY_TITLE));
+        //        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
+        appBarImg.setImageURI(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH));
 
-        Target target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                BitmapDrawable backdround = new BitmapDrawable(getResources(), bitmap);
-                backdround.setAlpha(150);
-                lineayout1.setBackgroundDrawable(backdround);
-            }
+        double rate = Double.parseDouble(infBundle.getString(Utility.BUNDLE_KEY_RATE));
+        Double numberOfstra = rate / 10 * 5;
+        Logger.d(rate + "");
 
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {    //當圖片加載失敗時調用
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {     //當任務被提交時調用
-            }
-        };
-
-
-        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_POSTERPATH)).into(target);
-        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
-
-        tvRate.setText(infBundle.getString(Utility.BUNDLE_KEY_RATE));
+        ratingBar.setNumStars(numberOfstra.intValue());
         tvDate.setText(infBundle.getString(Utility.BUNDLE_KEY_DATE));
         tvOverview.setText(infBundle.getString(Utility.BUNDLE_KEY_OVERVIEW));
 
         m_id = infBundle.getString(Utility.BUNDLE_KEY_M_ID);
-        assert m_id != null;
-        CURSORLOADER_ID = Integer.parseInt(m_id);
-        imb1.setOnClickListener(this);
-
-        getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
-
         //Load trailer with the m_id
         new getTrailerTask().execute(m_id);
 
         //Load review with the m_id
         new getReviewTask().execute(m_id);
+        assert m_id != null;
+        CURSORLOADER_ID = Integer.parseInt(m_id);
+        imb1.setOnClickListener(this);
 
-        return view;
-    }
+        //set The recycle view of trailer
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvTrailer.setLayoutManager(layoutManager);
 
-    @Override
-    public void onPause() {
-        super.onPause();
+        recycleTrailerAdapter = new RecycleTrailerAdapter(getContext());
+        rvTrailer.setAdapter(recycleTrailerAdapter);
+
+        lvShowReview.setEmptyView(emptyView);
+
+
     }
 
     @Override
@@ -195,18 +213,21 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        int i = data.getCount();
-        if (i > 0) {
-            //in the favourite table
-            imb1.setImageResource(R.drawable.ic_star_white_36dp);
-            imb1.setTag("R.drawable.ic_star_white_36dp");
-        } else {
-            // not in the favourite table
-            imb1.setImageResource(R.drawable.ic_star_black_36dp);
-            imb1.setTag("(R.drawable.ic_star_black_36dp");
-        }
+        if (imb1 != null) {
+            int i = data.getCount();
+            if (i > 0) {
+                //in the favourite table
+                imb1.setImageResource(R.drawable.ic_favorite_black_36dp);
+                imb1.setTag("R.drawable.ic_favorite_black_36dp");
+            } else {
+                // not in the favourite table
+                imb1.setImageResource(R.drawable.ic_favorite_border_black_36dp);
+                imb1.setTag("R.drawable.ic_favorite_border_black_36dp");
+            }
 
 //        data.close();
+        }
+
 
     }
 
@@ -222,14 +243,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 //                Toast.makeText(this,m_id,Toast.LENGTH_SHORT).show();
 
 
-                if (imb1.getTag().equals("R.drawable.ic_star_white_36dp")) {
+                if (imb1.getTag().equals("R.drawable.ic_favorite_black_36dp")) {
                     //the star button is white now
 
                     //delete the  m_id from the favourite table
 
                     getContext().getContentResolver().delete(MovieDbContract.FavouriteEntry.buildFavouriteWithID(Long.parseLong(m_id)), null, null);
 
-                    imb1.setImageResource(R.drawable.ic_star_black_36dp);
+                    imb1.setImageResource(R.drawable.ic_favorite_border_black_36dp);
                 } else {
                     //the star button is black now
                     //insert the m_id to the favourite table
@@ -237,7 +258,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
                     cv.put(MovieDbContract.FavouriteEntry.COLUMN_MOVIE_KEY, Long.parseLong(m_id));
                     getContext().getContentResolver().insert(MovieDbContract.FavouriteEntry.CONTENT_URI, cv);
 
-                    imb1.setImageResource(R.drawable.ic_star_white_36dp);
+                    imb1.setImageResource(R.drawable.ic_favorite_black_36dp);
                 }
 
                 break;
@@ -261,7 +282,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         startActivity(intent);
     }
 
-    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> implements AdapterView.OnItemClickListener {
+    private class getTrailerTask extends AsyncTask<String, Void, List<Result>> implements RecycleTrailerAdapter.OnItemClickListener {
 
         @Override
         protected List<Result> doInBackground(String... params) {
@@ -293,23 +314,32 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         protected void onPostExecute(List<Result> result) {
             super.onPostExecute(result);
             try {
-                TrailerAdapter ta = new TrailerAdapter(mContext, result);
+                /*TrailerAdapter ta = new TrailerAdapter(mContext, result);
                 lvTrailer.setAdapter(ta);
 //                lvTrailer.setMinimumHeight(20);
-                lvTrailer.setOnItemClickListener(this);
-            }catch (Exception e){
-                Log.e("onPostExecute error",e.toString());
+                lvTrailer.setOnItemClickListener(this);*/
+
+                //TODO recycle view of trailer
+                recycleTrailerAdapter.swapData(result);
+                recycleTrailerAdapter.setIteamClickListener(this);
+            } catch (Exception e) {
+                Log.e("onPostExecute error", e.toString());
             }
 
         }
 
         @Override
+        public void onItemClick(int position, String trailerKey) {
+            watchYoutubeVideo(trailerKey);
+        }
+
+        /*@Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             Result trailer = (Result) parent.getItemAtPosition(position);
             watchYoutubeVideo(trailer.getKey());
 
-        }
+        }*/
     }
 
     private class getReviewTask extends AsyncTask<String, Void, List<pom2.poly.com.trythemoviedbapi.MovieAPI.ReviewResult.Result>> {
@@ -321,8 +351,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
             try {
                 ReviewAdapter ra = new ReviewAdapter(mContext, reviewResult);
                 lvShowReview.setAdapter(ra);
-            }catch (Exception e){
-                Log.e("onPostExecute error",e.toString());
+
+
+            } catch (Exception e) {
+                Log.e("onPostExecute error", e.toString());
             }
 
         }

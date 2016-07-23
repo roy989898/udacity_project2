@@ -1,17 +1,24 @@
 package pom2.poly.com.trythemoviedbapi.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 
+import com.orhanobut.logger.Logger;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import pom2.poly.com.trythemoviedbapi.Fragment.DetailFragment;
 import pom2.poly.com.trythemoviedbapi.Fragment.MainFragment;
@@ -20,11 +27,23 @@ import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 import pom2.poly.com.trythemoviedbapi.Utility;
 
 
-public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
+public class MainActivity extends AppCompatActivity implements MainFragment.Callback, AdapterView.OnItemSelectedListener {
 
     private static Boolean isTwoPlanMode = false;
 
     FrameLayout frameLayoutDetailMain;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.spSortMode)
+    Spinner spSortMode;
+    private ArrayAdapter<String> sortArray;
+    private SharedPreferences preference;
+    private SharedPreferences.Editor editor;
+    private MainFragment mainFragment;
+
+    public static Boolean getIsTwoPlanMode() {
+        return isTwoPlanMode;
+    }
 
 
 //    private ArrayList<Movie> movieArrayList;
@@ -85,21 +104,34 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setSupportActionBar(toolbar);
+
+        sortArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.pref_sort_entries));
+        spSortMode.setAdapter(sortArray);
+        spSortMode.setOnItemSelectedListener(this);
+
         FragmentManager fragementManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragementManager.beginTransaction();
 
         //use can find the frame_layout_detail_in_main layout yo define is the phone is loarge and landscape
-        frameLayoutDetailMain= (FrameLayout) findViewById(R.id.frame_layout_detail_in_main);
+        frameLayoutDetailMain = (FrameLayout) findViewById(R.id.frame_layout_detail_in_main);
         isTwoPlanMode = frameLayoutDetailMain != null;
 
         if (savedInstanceState == null) {
-            MainFragment mainFragment = new MainFragment();
-            mainFragment.setIsTwoPlanMode(isTwoPlanMode);
-            fragmentTransaction.add(R.id.frame_layout_main, mainFragment);
+
+            mainFragment = new MainFragment();
+            Logger.d("create a mainFragment");
+            fragmentTransaction.add(R.id.frame_layout_main, mainFragment,"f1");
             fragmentTransaction.commit();
 
-
+        }else{
+            mainFragment= (MainFragment) getSupportFragmentManager().findFragmentByTag("f1");
         }
+
+
+
+        preference = getSharedPreferences(getString(R.string.sharedPreferenceName), Context.MODE_PRIVATE);
+        editor = preference.edit();
 
 
         //S
@@ -135,11 +167,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-//        outState.putParcelableArrayList(MOVIE_KEY, movieArrayList);
-    }
 
 
     //this method use the data from getConfigData and getMovieDatav2 ,to get the MOVIE object array
@@ -226,22 +253,22 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     }*/
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+    /* @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+         getMenuInflater().inflate(R.menu.main, menu);
+         return true;
+     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingActivity.class));
-                return true;
-        }
-        return true;
-    }
-
+     @Override
+     public boolean onOptionsItemSelected(MenuItem item) {
+         switch (item.getItemId()) {
+             case R.id.action_settings:
+                 startActivity(new Intent(this, SettingActivity.class));
+                 return true;
+         }
+         return true;
+     }
+ */
     @Override
     public void onItemClick(int position, View v, Cursor c) {
         /*FragmentManager fragmentManager=getSupportFragmentManager();
@@ -255,10 +282,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransavtion = fragmentManager.beginTransaction();
 
-            DetailFragment df=new DetailFragment();
+            DetailFragment df = new DetailFragment();
             df.setArguments(putCursordatainToBundle(c));
             df.setIsTwoPlanMode(true);
-            fragmentTransavtion.replace(R.id.frame_layout_detail_in_main,df);
+            fragmentTransavtion.replace(R.id.frame_layout_detail_in_main, df);
             fragmentTransavtion.commit();
 
 
@@ -291,6 +318,41 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         bundle.putString(Utility.BUNDLE_KEY_BACKGROUNDPATH, background_path);
         bundle.putString(Utility.BUNDLE_KEY_M_ID, m_id);
         return bundle;
+    }
+
+//    for the spSortMode
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        switch (position) {
+            case 0:
+//                pop
+                editor.putString(getString(R.string.pref_sort__key), Utility.POP_MOVIE);
+                editor.commit();
+                break;
+
+            case 1:
+//                High rated
+                editor.putString(getString(R.string.pref_sort__key), Utility.TOP_MOVIE);
+                editor.commit();
+                break;
+
+            case 2:
+//                fav
+                editor.putString(getString(R.string.pref_sort__key), Utility.FAV_MOVIE);
+                editor.commit();
+                break;
+        }
+
+        if (mainFragment != null)
+            mainFragment.updateMovie();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     /*private Config getConfigData() {

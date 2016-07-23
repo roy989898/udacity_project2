@@ -31,6 +31,7 @@ public class ReviewAdapter extends ArrayAdapter<Result> {
         }
         ViewHolder vh = (ViewHolder) convertView.getTag();
         vh.tvReview.setText(result.getContent());
+        vh.tvAuthor.setText(result.getAuthor());
 
 
         return convertView;
@@ -45,6 +46,8 @@ public class ReviewAdapter extends ArrayAdapter<Result> {
      * @author ButterKnifeZelezny, plugin for Android Studio by Avast Developers (http://github.com/avast)
      */
     static class ViewHolder {
+        @Bind(R.id.tvAuthor)
+        TextView tvAuthor;
         @Bind(R.id.tvReview)
         TextView tvReview;
 
@@ -53,4 +56,6 @@ public class ReviewAdapter extends ArrayAdapter<Result> {
 //            tvReview= (TextView) view.findViewById(R.id.tvReview);
         }
     }
+
+
 }

@@ -202,38 +202,30 @@ public class MovieContentProvider extends ContentProvider {
     private Cursor getMovie(String[] projection, String selection,
                             String[] selectionArgs) {
 
-        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
-
-        return cursor;
+        return db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
     }
 
     private Cursor getMoviewithPOP(String[] projection, String selection,
                                    String[] selectionArgs) {
 
-        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, MovieDbContract.MovieEntry.COLUMN_POP + " DESC");
-
-        return cursor;
+        return db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, MovieDbContract.MovieEntry.COLUMN_POP + " DESC");
     }
 
     private Cursor getMoviewithTOP(String[] projection, String selection,
                                    String[] selectionArgs) {
 
-        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
-
-        return cursor;
+        return db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
     }
 
     private Cursor getMoviewithID(String[] projection, long m_id) {
 
-        Cursor cursor = db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, MovieDbContract.MovieEntry.COLUMN_M_ID + " =?", new String[]{m_id + ""}, null, null, MovieDbContract.MovieEntry.COLUMN_RAGE + " DESC");
-
-        return cursor;
+        return db.query(MovieDbContract.MovieEntry.TABLE_NAME, projection, MovieDbContract.MovieEntry.COLUMN_M_ID + " =?", new String[]{m_id + ""}, null, null, MovieDbContract.MovieEntry.COLUMN_RAGE + " DESC");
     }
 
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
+
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

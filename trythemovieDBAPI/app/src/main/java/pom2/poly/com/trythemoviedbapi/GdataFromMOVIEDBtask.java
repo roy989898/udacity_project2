@@ -2,7 +2,6 @@ package pom2.poly.com.trythemoviedbapi;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,29 +20,16 @@ import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-/**
- * Created by User on 30/1/2016.
- */
 public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
     private String perf_sort_pop_top_fav;
-    private String old_perf_sort_op;
     private Context mContext = null;
 
-    public GdataFromMOVIEDBtask(Context mContext, String old_perf_sort_op, String perf_sort_pop_top_fav) {
+    public GdataFromMOVIEDBtask(Context mContext, String perf_sort_pop_top_fav) {
         super();
         this.mContext = mContext;
-        this.old_perf_sort_op = old_perf_sort_op;
         this.perf_sort_pop_top_fav = perf_sort_pop_top_fav;
     }
 
-    public String getOld_perf_sort_op() {
-        return old_perf_sort_op;
-    }
-
-    public GdataFromMOVIEDBtask setOld_perf_sort_op(String old_perf_sort_op) {
-        this.old_perf_sort_op = old_perf_sort_op;
-        return this;
-    }
 
     public String getPerf_sort_pop_top_fav() {
         return perf_sort_pop_top_fav;
@@ -91,49 +77,25 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
         cv.put(MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE, 0);
         cv.put(MovieDbContract.MovieEntry.COLUMN_BACK_DROP_SZIE, 0);
         cv.put(MovieDbContract.MovieEntry.COLUMN_BASE_URL, "");
-        Uri uri = mContext.getContentResolver().insert(MovieDbContract.MovieEntry.CONTENT_URI, cv);
-        return uri;
+        return mContext.getContentResolver().insert(MovieDbContract.MovieEntry.CONTENT_URI, cv);
     }
 
     @Override
     protected void onPostExecute(Movie[] movieArray) {
         super.onPostExecute(movieArray);
-        //Todo delete the Array adapter
-            /*if (movieArray != null) {
-                Log.i("GdataFromMOVIEDBtask", "in onPostExecute");
-                movieArrayList.clear();
-                movieArrayList.addAll(Arrays.asList(movieArray));
-                //myArrayAdapter.notifyDataSetChanged();
-            }*/
-        //for test the ContentProvider only
-        //testThequery(MovieDbContract.MovieEntry.buildMovieID(278));
 
-        //after update make the old_perf_sort_op and  perf_sort_op be the same value
-
-        //TODO
-        /*if (!old_perf_sort_op.equals(perf_sort_pop_top_fav)) {
-            SharedPreferences sharePreference = mContext.getSharedPreferences(Utility.SHAREDPREFERENCE_KEY, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharePreference.edit();
-            editor.putString(mContext.getResources().getString(R.string.old_pref_sort__key), perf_sort_pop_top_fav);
-            editor.commit();
-        }*/
 
 
     }
 
     private void testThequery(Uri uri) {
         Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
-        while (cursor != null ? cursor.moveToNext() : false) {
+        while (cursor != null && cursor.moveToNext()) {
             Log.i("show_cursor", cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry._ID)) + " " + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE)) + " rage: "
                     + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE)) + " popularity: " + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POP)));
         }
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-    }
 
     private Config getConfigData() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -181,7 +143,6 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
                     mrArraylist.add(movieResult);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    continue;
                 }
             }
             MovieIdResult[] mrArray = new MovieIdResult[mrArraylist.size()];
@@ -198,8 +159,7 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
             Results result1 = getMovieDatav2(perf_sort_pop_top_fav);
             return MovieFactory.startMakeMovieArray(configr, result1);
         } else {
-            //select Favourite in the setting
-            //TODO
+
             MovieIdResult[] mra = getMviedResult();
             return MovieFactory.startMakeMovieArrayfromMovideResult(configr, mra);
         }
