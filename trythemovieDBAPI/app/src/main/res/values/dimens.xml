@@ -9,4 +9,6 @@
     <dimen name="recycle_view_trailer_cell_margin">5dp</dimen>
     <dimen name="detail_fragmnet__review_top_padding">5dp</dimen>
     <dimen name="detail_fragmnet__review_bottom_padding">5dp</dimen>
+    <dimen name="detail_content_RecyclerView_height">100dp</dimen>
+
 </resources>
