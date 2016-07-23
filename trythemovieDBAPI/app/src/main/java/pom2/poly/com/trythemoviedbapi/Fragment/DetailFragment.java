@@ -16,6 +16,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +46,7 @@ import pom2.poly.com.trythemoviedbapi.R;
 import pom2.poly.com.trythemoviedbapi.ReviewAdapter;
 import pom2.poly.com.trythemoviedbapi.Sqlite.MovieDbContract;
 import pom2.poly.com.trythemoviedbapi.TrailerAdapter;
+import pom2.poly.com.trythemoviedbapi.TrailerRecycleView.RecycleTrailerAdapter;
 import pom2.poly.com.trythemoviedbapi.Utility;
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
@@ -73,10 +76,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     TextView tvDate;
     @Bind(R.id.tvOverview)
     TextView tvOverview;
-    @Bind(R.id.tvTrailer)
-    TextView tvTrailer;
-    @Bind(R.id.lvTrailer)
-    ListView lvTrailer;
+
+
     @Bind(R.id.textView)
     TextView textView;
     @Bind(R.id.lvShowReview)
@@ -85,12 +86,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     LinearLayout lineayout1;
     @Bind(R.id.nested_scrollView)
     NestedScrollView nestedScrollView;
+    @Bind(R.id.rvTrailer)
+    RecyclerView rvTrailer;
 
 
     private String m_id = null;
     private Boolean isTwoPlanMode = false;
     private Bundle infBundle = null;
     private Context mContext;
+    private RecycleTrailerAdapter recycleTrailerAdapter;
 
 
     public Boolean getIsTwoPlanMode() {
@@ -148,9 +152,9 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
 //        Picasso.with(getContext()).load(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH)).into(iv1);
         appBarImg.setImageURI(infBundle.getString(Utility.BUNDLE_KEY_BACKGROUNDPATH));
 
-        double rate=Double.parseDouble(infBundle.getString(Utility.BUNDLE_KEY_RATE));
-        Double numberOfstra = rate / 10*5;
-        Logger.d(rate+"");
+        double rate = Double.parseDouble(infBundle.getString(Utility.BUNDLE_KEY_RATE));
+        Double numberOfstra = rate / 10 * 5;
+        Logger.d(rate + "");
 
         ratingBar.setNumStars(numberOfstra.intValue());
         tvDate.setText(infBundle.getString(Utility.BUNDLE_KEY_DATE));
@@ -170,6 +174,13 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
       /*  ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
+
+        //set The recycle iew of trailer
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvTrailer.setLayoutManager(layoutManager);
+
+        recycleTrailerAdapter = new RecycleTrailerAdapter(getContext());
+        rvTrailer.setAdapter(recycleTrailerAdapter);
 
         //Load trailer with the m_id
         new getTrailerTask().execute(m_id);
@@ -298,10 +309,13 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         protected void onPostExecute(List<Result> result) {
             super.onPostExecute(result);
             try {
-                TrailerAdapter ta = new TrailerAdapter(mContext, result);
+                /*TrailerAdapter ta = new TrailerAdapter(mContext, result);
                 lvTrailer.setAdapter(ta);
 //                lvTrailer.setMinimumHeight(20);
-                lvTrailer.setOnItemClickListener(this);
+                lvTrailer.setOnItemClickListener(this);*/
+
+                //TODO recycle view of trailer
+                recycleTrailerAdapter.swapData(result);
             } catch (Exception e) {
                 Log.e("onPostExecute error", e.toString());
             }
@@ -326,6 +340,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
             try {
                 ReviewAdapter ra = new ReviewAdapter(mContext, reviewResult);
                 lvShowReview.setAdapter(ra);
+
+
             } catch (Exception e) {
                 Log.e("onPostExecute error", e.toString());
             }

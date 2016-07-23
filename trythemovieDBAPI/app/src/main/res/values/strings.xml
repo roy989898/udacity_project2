@@ -14,5 +14,7 @@
 
     <string name="detailFragmnet_releaseDate">Release Date: </string>
 
+    <string name="youtubeTrailer_link">http://img.youtube.com/vi/%s/0.jpg</string>
+
 
 </resources>
