@@ -50,10 +50,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     private SharedPreferences preference;
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
+
 
     public void updateMovie() {
 

@@ -77,8 +77,7 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
         cv.put(MovieDbContract.MovieEntry.COLUMN_POSTER_SIZE, 0);
         cv.put(MovieDbContract.MovieEntry.COLUMN_BACK_DROP_SZIE, 0);
         cv.put(MovieDbContract.MovieEntry.COLUMN_BASE_URL, "");
-        Uri uri = mContext.getContentResolver().insert(MovieDbContract.MovieEntry.CONTENT_URI, cv);
-        return uri;
+        return mContext.getContentResolver().insert(MovieDbContract.MovieEntry.CONTENT_URI, cv);
     }
 
     @Override
@@ -91,17 +90,12 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
 
     private void testThequery(Uri uri) {
         Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
-        while (cursor != null ? cursor.moveToNext() : false) {
+        while (cursor != null && cursor.moveToNext()) {
             Log.i("show_cursor", cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry._ID)) + " " + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE)) + " rage: "
                     + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RAGE)) + " popularity: " + cursor.getString(cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POP)));
         }
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-    }
 
     private Config getConfigData() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -149,7 +143,6 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
                     mrArraylist.add(movieResult);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    continue;
                 }
             }
             MovieIdResult[] mrArray = new MovieIdResult[mrArraylist.size()];

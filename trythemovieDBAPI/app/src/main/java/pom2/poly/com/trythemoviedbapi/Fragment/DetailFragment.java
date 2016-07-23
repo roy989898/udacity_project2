@@ -97,9 +97,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         return isTwoPlanMode;
     }
 
-    public DetailFragment setIsTwoPlanMode(Boolean isTwoPlanMode) {
+    public void setIsTwoPlanMode(Boolean isTwoPlanMode) {
         this.isTwoPlanMode = isTwoPlanMode;
-        return this;
     }
 
     @Override
@@ -198,11 +197,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         lvShowReview.setEmptyView(emptyView);
 
 
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override

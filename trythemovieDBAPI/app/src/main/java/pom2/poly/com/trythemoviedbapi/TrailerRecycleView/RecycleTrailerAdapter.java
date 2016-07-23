@@ -42,8 +42,7 @@ public class RecycleTrailerAdapter extends RecyclerView.Adapter<RecycleTrailerAd
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.trailer_revycle_cell, parent, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override

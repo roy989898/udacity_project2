@@ -167,17 +167,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-//        outState.putParcelableArrayList(MOVIE_KEY, movieArrayList);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     //this method use the data from getConfigData and getMovieDatav2 ,to get the MOVIE object array
     /*private Movie[] getMOvieObject() {

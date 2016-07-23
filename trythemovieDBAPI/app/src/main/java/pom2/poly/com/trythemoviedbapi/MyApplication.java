@@ -1,16 +1,9 @@
 package pom2.poly.com.trythemoviedbapi;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
-
-import java.io.IOException;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by User on 20/1/2016.

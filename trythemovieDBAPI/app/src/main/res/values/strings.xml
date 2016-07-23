@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">TheMovie</string>
-    <string name="api_key" translatable="false">db9db09d5d4c08b057a2aefbeea458b0</string>
-    <string name="setting">Setting</string>
     <string name="pref_sort_title">Sort by</string>
     <string name="pref_sort_value_default">pop</string>
     <string name="pref_sort__key">perf_sort</string>
-    <string name="old_pref_sort__key">o_perf_sort</string>
     <string name="most_popular">Most popular</string>
     <string name="highest_rated">Highest-rated</string>
     <string name="user_favourite">Favourite</string>
