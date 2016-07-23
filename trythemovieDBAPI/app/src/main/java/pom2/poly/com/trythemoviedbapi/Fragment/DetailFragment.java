@@ -123,6 +123,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
         View view = inflater.inflate(R.layout.fragment_detail_v2, container, false);
         Log.i("DetailFragment", "onCreateView");
         ButterKnife.bind(this, view);
@@ -144,6 +146,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         }
 
         bindDataToView(infBundle);
+
 
         getActivity().getSupportLoaderManager().initLoader(CURSORLOADER_ID, null, this);
 
