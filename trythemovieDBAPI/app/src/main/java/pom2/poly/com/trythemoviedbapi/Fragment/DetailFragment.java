@@ -130,6 +130,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         Log.i("DetailFragment", "onCreateView");
         ButterKnife.bind(this, view);
 
+
         imb1 = (ImageButton) view.findViewById(R.id.imb1);
 
         //        Movie aMovie = getIntent().getParcelableExtra(DetailActivity.class.getName());
@@ -157,15 +158,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
 
-
-
-        //Load trailer with the m_id
-        new getTrailerTask().execute(m_id);
-
-        //Load review with the m_id
-        new getReviewTask().execute(m_id);
-
-
         return view;
     }
 
@@ -183,6 +175,11 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Lo
         tvOverview.setText(infBundle.getString(Utility.BUNDLE_KEY_OVERVIEW));
 
         m_id = infBundle.getString(Utility.BUNDLE_KEY_M_ID);
+        //Load trailer with the m_id
+        new getTrailerTask().execute(m_id);
+
+        //Load review with the m_id
+        new getReviewTask().execute(m_id);
         assert m_id != null;
         CURSORLOADER_ID = Integer.parseInt(m_id);
         imb1.setOnClickListener(this);
