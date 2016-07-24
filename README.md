@@ -45,14 +45,6 @@ This is the third project of the Udacity Android Developer Nanodegree. This  app
 
 
 
-
-
-
-
-## Technology and library used
-
-- Android Wear APIs
-
 ## License
 ```
 
