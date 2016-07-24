@@ -2,14 +2,6 @@
 
 This is the third project of the Udacity Android Developer Nanodegree. This  app optimized for tablets, to help users discover popular and highly rated movies on the web. It displays a scrolling grid of movie trailers, launches a details screen whenever a particular movie is selected, allows users to save favorites, play trailers, and read user reviews. This app utilizes core Android user interface components and fetches movie information using themoviedb.org web API.
 
-
-
-## Download
-
-[here](https://github.com/roy989898/udacity_project2/raw/master/trythemovieDBAPI/app/app-release.apk)
-
-
-
 ## Feature
 
 - Clean and beautiful
@@ -17,8 +9,6 @@ This is the third project of the Udacity Android Developer Nanodegree. This  app
 - optimized for tablets and mobile phone
 - Save your favorite movie
 - Movie trailer shortcut
-
-
 
 
 ## Technology and  Library
@@ -32,6 +22,12 @@ This is the third project of the Udacity Android Developer Nanodegree. This  app
 - retrofit2
 - fresco
 - butterknife
+
+## Download
+
+[here](https://github.com/roy989898/udacity_project2/raw/master/trythemovieDBAPI/app/app-release.apk)
+
+
 
 ## Screenshots
 
