@@ -15,6 +15,18 @@ This is the third project of the Udacity Android Developer Nanodegree. This  app
 
 
 
+## Technology and  Library
+
+- Android UI Fundamentals - Tablet 
+- Intents 
+- themoviedb.org API 
+- Offline Data Persistance - Shared Preferences
+- Content provider
+- SQLite
+- retrofit2
+- fresco
+- butterknife
+
 ## Screenshots
 
 ![https://github.com/roy989898/udacity_project2/raw/master/screen_shot/device-2016-07-24-125853.png](https://github.com/roy989898/udacity_project2/raw/master/screen_shot/device-2016-07-24-125853.png)
