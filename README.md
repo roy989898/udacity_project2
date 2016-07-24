@@ -4,6 +4,12 @@ This is the third project of the Udacity Android Developer Nanodegree. This  app
 
 
 
+## Download
+
+[here](https://github.com/roy989898/udacity_project2/raw/master/trythemovieDBAPI/app/app-release.apk)
+
+
+
 ## Feature
 
 - Clean and beautiful
