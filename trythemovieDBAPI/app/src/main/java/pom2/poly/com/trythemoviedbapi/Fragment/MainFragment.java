@@ -130,13 +130,16 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 });
 
 
+
+        ButterKnife.bind(this, view);
+
+        myRecyclerView.setHasFixedSize(false);
+
         if (mainActivity.getIsTwoPlanMode() && !isPortrait()) {
             mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         } else {
             mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         }
-
-        ButterKnife.bind(this, view);
 
         myRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -206,6 +209,14 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 myrecycleViewadapter.setCellWidth(screenWidth / 2);
             myrecycleViewadapter.swapCursor(data);
         }
+
+        if (mainActivity.getIsTwoPlanMode() && !isPortrait()) {
+            mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        } else {
+            mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        }
+
+        myRecyclerView.setLayoutManager(mLayoutManager);
 
 
     }
