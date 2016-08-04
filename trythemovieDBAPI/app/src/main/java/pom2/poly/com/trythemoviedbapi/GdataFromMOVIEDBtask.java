@@ -56,8 +56,12 @@ public class GdataFromMOVIEDBtask extends AsyncTask<Void, Void, Movie[]> {
 
         //get the new data and insert in to the SQL table
         Movie[] movieArray = getMOvieObject();
-        for (Movie m : movieArray) {
-            insertIntoContntProvider(m);
+
+        if (movieArray != null) {
+            for (Movie m : movieArray) {
+                insertIntoContntProvider(m);
+
+            }
 
         }
 
